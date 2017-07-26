@@ -1,9 +1,36 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "draw.h"
+#include <string>
+#include <iostream>
+#include <fstream>
+#include "include/config.h"
 
-int main()
+using namespace std;
+
+const int CLI_ARG_ERROR_CODE = 0x1;
+
+// Command line arguments
+// -c [Config file path]
+int main(int argv, char **argc)
 {
+	// Handle command line arguments
+	for (int i = 1; i < argv; i++) {
+		const char *arg = argc[i];
+		if (strcmp(arg, "-c") == 0) {
+			i++;
+			if (i != argv) {
+				cout << "Looking for config file at location: " << argc[i] << endl;
+				fstream fin(argc[i]);
+				string contents((istreambuf_iterator<char>(fin)), istreambuf_iterator<char>());
+				Catan::Generate::Config config = Catan::Generate::Config(contents.c_str());
+			} else {
+				cerr << "Usage: -c [Config File Path]" << endl;
+				return CLI_ARG_ERROR_CODE;
+			}
+		}
+	}
+
     if (Catan::Draw::Initialize())
     {
 

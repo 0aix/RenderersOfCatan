@@ -57,6 +57,7 @@ namespace Catan {
 
 			if (!CheckOddDelta()) {
 				cerr << "[Config File ERROR] Subsequent row sizes in the board must have an odd difference" << endl;
+				throw ConfigParseException();
 			}
 		}
 
@@ -111,6 +112,7 @@ namespace Catan {
 				if ((abs(boardColumns[i]) - prev) % 2 == 0) {
 					return false;
 				}
+				prev = boardColumns[i];
 			}
 			return true;
 		}
