@@ -51,10 +51,6 @@ namespace Catan
         GLuint textureShader;
         GLuint texture;
         GLuint framebuffer;
-        GLuint rendertexture;
-        GLuint depthrenderbuffer;
-
-        void LoadAll();
 
         bool Initialize()
         {
@@ -93,6 +89,7 @@ namespace Catan
                 case CATAN_GLFW_CREATE_WINDOW_FAILED:
                     glfwTerminate();
                 case CATAN_GLFW_INIT_FAILED:
+                    break;
                 }
             }
             return false;
@@ -153,13 +150,18 @@ namespace Catan
             glGenFramebuffers(1, &framebuffer);
             glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
             
-            Glenum DrawBuffer = GL_COLOR_ATTACHMENT0;
+            GLenum DrawBuffer = GL_COLOR_ATTACHMENT0;
             glDrawBuffers(1, &DrawBuffer);
+        }
 
-            
+        void Render()
+        {
+            // Compute width and height
 
-            glGenTextures(1, &rendertexture);
-            glBindTexture(GL_TEXTURE_2D, rendertexture);
+            // Set up render target and depth buffer
+            GLuint rendertarget;
+            glGenTextures(1, &rendertarget);
+            glBindTexture(GL_TEXTURE_2D, rendertarget);
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2048, 2048, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -170,24 +172,32 @@ namespace Catan
             glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 2048, 2048);
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer);
 
-            glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, renderedTexture, 0);
+            glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, rendertarget, 0);
+
+            // Render
 
 
+
+
+            // Pass in render target as texture
+            Preview();
+
+            // Release render target and depth buffer
+            glDeleteTextures(1, &rendertarget);
+            glDeleteRenderbuffers(1, &depthrenderbuffer);
         }
 
-        void DrawTile()
+        void DrawTile(float x, float y, float length, float margin, int type)
         {
+            // Draw tile outline
+            
 
+            // 
         }
 
         void Preview()
         {
 
-        }
-
-        void Render()
-        {
-            
         }
     }
 }

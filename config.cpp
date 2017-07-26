@@ -20,6 +20,13 @@ namespace Catan {
 			MOUNTAIN_COUNT = doc["mountain_count"].GetInt();
 			WHEAT_COUNT = doc["wheat_count"].GetInt();
 			FIELDS_COUNT = doc["fields_count"].GetInt();
+
+			const Value &boardArray = doc["board"];
+			assert(boardArray.IsArray());
+
+			for (SizeType i = 0; i < boardArray.Size(); i++) {
+				boardColumns.push_back(boardArray[i].GetInt());
+			}
 		}
 	}
 }
