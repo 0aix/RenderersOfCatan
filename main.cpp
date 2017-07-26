@@ -8,7 +8,8 @@
 
 using namespace std;
 
-const int CLI_ARG_ERROR_CODE = 0x1;
+const int CLI_ARG_ERROR_CODE = 1;
+const int CONFIG_PARSE_ERROR_CODE = 2; 
 
 // Command line arguments
 // -c [Config file path]
@@ -23,7 +24,11 @@ int main(int argv, char **argc)
 				cout << "Looking for config file at location: " << argc[i] << endl;
 				fstream fin(argc[i]);
 				string contents((istreambuf_iterator<char>(fin)), istreambuf_iterator<char>());
-				Catan::Generate::Config config = Catan::Generate::Config(contents.c_str());
+				try {
+					Catan::Generate::Config config = Catan::Generate::Config(contents.c_str());
+				} catch (Catan::Generate::ConfigParseException &e) {
+					return CONFIG_PARSE_ERROR_CODE;
+				}
 			} else {
 				cerr << "Usage: -c [Config File Path]" << endl;
 				return CLI_ARG_ERROR_CODE;
