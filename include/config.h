@@ -44,13 +44,26 @@ namespace Catan {
 		private:
 			std::vector<int> boardColumns;
 
-			std::vector<int> chits; 
+			std::vector<int> chits;
 
 			// TODO: add rules
 
 			Config();
 
 			int FindMaxColSize();
+
+			bool CheckNonNegative(std::vector<int> &v);
+
+			bool CheckChits();
+
+			int Sum(std::vector<int> &v);
+
+			bool CheckBoardSize();
+
+			bool CheckOddDelta();
 		};
+
+		// Config throws this when it encounters an error 
+		class ConfigParseException {};
 	}
 }
