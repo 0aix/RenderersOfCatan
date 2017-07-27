@@ -1,5 +1,5 @@
 # OBJS specifies which files to compile as part of the project
-OBJS = config.cpp shader.cpp draw.cpp main.cpp
+OBJS = abstractrule.cpp config.cpp shader.cpp draw.cpp main.cpp
 
 # CC specifies which compiler we're using
 CC = g++
