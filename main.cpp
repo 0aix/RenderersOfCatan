@@ -38,8 +38,7 @@ int main(int argv, char **argc)
 
     if (Catan::Draw::Initialize())
     {
-
-
+        Catan::Draw::Render();
         Catan::Draw::Uninitialize();
     }
 

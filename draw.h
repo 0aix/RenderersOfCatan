@@ -1,6 +1,8 @@
 #ifndef DRAW_H
 #define DRAW_H
 
+#include <GL/glew.h>
+
 namespace Catan
 {
     namespace Draw
@@ -10,9 +12,10 @@ namespace Catan
         void LoadAll();
 
         void Render();
-        void DrawTile(float x, float y, float length, float margin, int type);
+        void DrawTile(float cx, float cy, float length, float margin, int type);
 
-        void Preview();
+        void SaveToFile(GLuint textureID);
+        void Preview(GLuint textureID);
     }
 }
 
