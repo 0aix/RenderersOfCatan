@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include "abstractrule.h"
 
 // The config file schema looks like this:
 /*
@@ -41,14 +42,13 @@ namespace Catan {
 			int MAX_COL_SIZE;
 
 			Config(const char *json);
+			Config();
 		private:
 			std::vector<int> boardColumns;
 
 			std::vector<int> chits;
 
-			// TODO: add rules
-
-			Config();
+			std::vector<AbstractRule*> rules;
 
 			int FindMaxColSize();
 

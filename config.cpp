@@ -1,6 +1,7 @@
 #include "include/config.h"
 #include <string>
 #include <vector>
+#include <map>
 #include "rapidjson/document.h"
 #include <iostream>
 #include <stdlib.h>
@@ -10,6 +11,8 @@ using namespace rapidjson;
 
 namespace Catan {
 	namespace Generate {
+		Config::Config() {}
+
 		Config::Config(const char *json) {
 			Document doc;
 			doc.Parse(json);
@@ -58,6 +61,32 @@ namespace Catan {
 			if (!CheckOddDelta()) {
 				cerr << "[Config File ERROR] Subsequent row sizes in the board must have an odd difference" << endl;
 				throw ConfigParseException();
+			}
+
+			const Value &rulesArray = doc["rules"];
+
+			for (SizeType i = 0; i < rulesArray.Size(); i++) {
+				auto obj = rulesArray[i].GetObject();
+
+				map<string, int> intMap;
+				map<string, bool> boolMap;
+				map<string, string> stringMap;
+				
+				for (auto it = obj.MemberBegin(); it != obj.MemberEnd(); it++) {
+					string key = string((*it).name.GetString());
+					auto &value = (*it).value;
+
+					if (value.IsInt()) {
+						intMap[key] = value.GetInt();
+					} else if (value.IsBool()) {
+						boolMap[key] = value.GetBool();
+					} else if (value.IsString()) {
+						stringMap[key] = value.GetString();
+					} else {
+						cerr << "[Config File ERROR] Unknown type in rule '" << key << "'" << endl;
+						throw ConfigParseException();
+					}
+				}
 			}
 		}
 

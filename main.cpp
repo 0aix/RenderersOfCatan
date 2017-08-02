@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include "include/config.h"
+#include "include/abstractrule.h"
 
 using namespace std;
 
@@ -15,6 +16,7 @@ const int CONFIG_PARSE_ERROR_CODE = 2;
 // -c [Config file path]
 int main(int argv, char **argc)
 {
+	Catan::Generate::Config config;
 	// Handle command line arguments
 	for (int i = 1; i < argv; i++) {
 		const char *arg = argc[i];
@@ -25,8 +27,8 @@ int main(int argv, char **argc)
 				fstream fin(argc[i]);
 				string contents((istreambuf_iterator<char>(fin)), istreambuf_iterator<char>());
 				try {
-					Catan::Generate::Config config = Catan::Generate::Config(contents.c_str());
-				} catch (Catan::Generate::ConfigParseException &e) {
+					config = Catan::Generate::Config(contents.c_str());
+				} catch (...) {
 					return CONFIG_PARSE_ERROR_CODE;
 				}
 			} else {
@@ -35,6 +37,8 @@ int main(int argv, char **argc)
 			}
 		}
 	}
+
+
 
     if (Catan::Draw::Initialize())
     {
