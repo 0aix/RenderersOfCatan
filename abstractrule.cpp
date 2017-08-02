@@ -2,6 +2,7 @@
 #include "rapidjson/Document.h"
 #include <string>
 #include <map>
+#include <iostream>
 
 using namespace rapidjson;
 using namespace std;
@@ -14,6 +15,7 @@ namespace Catan {
 			if (it != boolMap.end()) {
 				followStrictly = it->second;
 			} else {
+				cerr << "Required field 'follow_strictly' not found" << endl;
 				throw RuleParseException();
 			}
 		}

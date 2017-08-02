@@ -5,6 +5,10 @@
 #include "rapidjson/document.h"
 #include <iostream>
 #include <stdlib.h>
+#include "include/nopondsrule.h"
+#include "include/nochitstouchingrule.h"
+#include "include/islandcountrule.h"
+#include "include/abstractrule.h"
 
 using namespace std;
 using namespace rapidjson;
@@ -87,6 +91,25 @@ namespace Catan {
 						throw ConfigParseException();
 					}
 				}
+
+				AbstractRule *rule = GenerateRule(stringMap["name"], intMap, boolMap, stringMap);
+				rules.push_back(rule);
+			}
+		}
+
+		// Factory method used to generate the rules from the JSON... as more rules are added,
+		// this method should be updated. In the future we can design a better system that requires less
+		// manual work
+		AbstractRule *Config::GenerateRule(string name, map<string, int> &intMap, map<string, bool> &boolMap, map<string, string> &stringMap) {
+			if (name == "NoPonds") {
+				return new NoPondsRule(boolMap);
+			} else if (name == "NoSpecialChitsTouching") {
+				return new NoSpecialChitsTouchingRule(boolMap);
+			} else if (name == "IslandCount") {
+				return new IslandCountRule(intMap, boolMap);
+			} else {
+				cerr << "[Config File ERROR] Unknown rule '" << name << "'" << endl;
+				throw ConfigParseException();
 			}
 		}
 

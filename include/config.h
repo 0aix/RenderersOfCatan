@@ -1,6 +1,8 @@
 #pragma once
 #include <vector>
 #include "abstractrule.h"
+#include <map>
+#include <string>
 
 // The config file schema looks like this:
 /*
@@ -61,6 +63,11 @@ namespace Catan {
 			bool CheckBoardSize();
 
 			bool CheckOddDelta();
+
+			AbstractRule *GenerateRule(std::string name, 
+				std::map<std::string, int> &intMap, 
+				std::map<std::string, bool> &boolMap, 
+				std::map<std::string, std::string> &stringMap);
 		};
 
 		// Config throws this when it encounters an error 
