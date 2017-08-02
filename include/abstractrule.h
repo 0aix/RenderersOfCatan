@@ -9,7 +9,7 @@ namespace Catan {
 			bool followStrictly;
 
 		protected:
-			AbstractRule(std::map<std::string, bool> boolMap);
+			AbstractRule(std::map<std::string, bool> &boolMap);
 
 		public:
 			virtual bool IsFollowed(/* TODO */) = 0;
