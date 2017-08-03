@@ -9,6 +9,7 @@
 #include "include/nochitstouchingrule.h"
 #include "include/islandcountrule.h"
 #include "include/abstractrule.h"
+#include "include/boardnode.h"
 
 using namespace std;
 using namespace rapidjson;
@@ -113,6 +114,40 @@ namespace Catan {
 			}
 		}
 
+		int Config::TileCount() {
+			return MOUNTAIN_COUNT
+			+ MINE_COUNT
+			+ GOLD_COUNT
+			+ DESERT_COUNT
+			+ FIELDS_COUNT
+			+ FOREST_COUNT
+			+ WATER_COUNT
+			+ WHEAT_COUNT;
+		}
+
+		int Config::TileCountFromType(TileType t) {
+			switch (t) {
+				case MOUNTAIN: 
+					return MOUNTAIN_COUNT;
+				case MINE: 
+					return MINE_COUNT;
+				case GOLD: 
+					return GOLD_COUNT;
+				case DESERT: 
+					return DESERT_COUNT;
+				case FIELD: 
+					return FIELDS_COUNT;
+				case FOREST: 
+					return FOREST_COUNT;
+				case WATER: 
+					return WATER_COUNT;
+				case WHEAT: 
+					return WHEAT_COUNT;
+				default: 
+					return 0;  
+			}
+		}
+
 		int Config::FindMaxColSize() {
 			MAX_COL_SIZE = 0;
 			for (int i = 0; i < boardColumns.size(); i++) {
@@ -144,14 +179,7 @@ namespace Catan {
 		}
 
 		bool Config::CheckBoardSize() {
-			return Sum(boardColumns) <= MOUNTAIN_COUNT
-			+ MINE_COUNT
-			+ GOLD_COUNT
-			+ DESERT_COUNT
-			+ FIELDS_COUNT
-			+ FOREST_COUNT
-			+ WATER_COUNT
-			+ WHEAT_COUNT;
+			return Sum(boardColumns) <= TileCount();
 		}
 
 		bool Config::CheckOddDelta() {

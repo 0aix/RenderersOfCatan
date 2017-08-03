@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "abstractrule.h"
+#include "boardnode.h"
 #include <map>
 #include <string>
 
@@ -26,32 +27,23 @@ namespace Catan {
 		class Config {
 		public:
 			int WATER_COUNT;
-			
 			int DESERT_COUNT;
-			
 			int GOLD_COUNT;
-			
 			int FOREST_COUNT;
-			
 			int MINE_COUNT;
-			
-			int MOUNTAIN_COUNT;
-			
+			int MOUNTAIN_COUNT;			
 			int WHEAT_COUNT;
-
 			int FIELDS_COUNT;
-
 			int MAX_COL_SIZE;
+			std::vector<int> boardColumns;
+			std::vector<int> chits;
+			std::vector<AbstractRule*> rules;
 
 			Config(const char *json);
 			Config();
+			int TileCount();
+			int TileCountFromType(TileType t);
 		private:
-			std::vector<int> boardColumns;
-
-			std::vector<int> chits;
-
-			std::vector<AbstractRule*> rules;
-
 			int FindMaxColSize();
 
 			bool CheckNonNegative(std::vector<int> &v);

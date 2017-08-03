@@ -6,6 +6,7 @@
 #include <fstream>
 #include "include/config.h"
 #include "include/abstractrule.h"
+#include "include/boardgraph.h"
 
 using namespace std;
 
@@ -38,7 +39,8 @@ int main(int argv, char **argc)
 		}
 	}
 
-
+	Catan::Generate::BoardGraph graph = Catan::Generate::BoardGraph(&config);
+	graph.Randomize();
 
     if (Catan::Draw::Initialize())
     {
