@@ -1,6 +1,5 @@
 #pragma once
 #include <vector>
-#include "abstractrule.h"
 #include "boardnode.h"
 #include <map>
 #include <string>
@@ -24,6 +23,7 @@
 
 namespace Catan {
 	namespace Generate {
+		class AbstractRule;
 		class Config {
 		public:
 			int WATER_COUNT;

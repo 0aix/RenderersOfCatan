@@ -34,7 +34,7 @@ namespace Catan {
 		class BoardNode {
 		public:
 			// Useful for graph traversal
-			bool isMarked;
+			bool marked;
 			std::vector<BoardNode*> neighbours;
 			TileType type;
 			int chit;

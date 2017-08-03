@@ -1,10 +1,10 @@
 #pragma once
 #include <vector>
 #include "boardnode.h"
-#include "config.h"
 
 namespace Catan {
 	namespace Generate {
+		class Config;
 		class BoardGraphForwardIterator;
 		class BoardGraph {
 		public:
@@ -18,6 +18,7 @@ namespace Catan {
 
 			BoardNode *GenerateRow(int size);
 			void ColumnLink(int leftSize, BoardNode *firstLeft, int rightSize, BoardNode *firstRight);
+			void UnMarkAll();
 		};
 
 		// Used to traverse a BoardGraph, column by column

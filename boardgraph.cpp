@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <vector>
 #include <iostream>
+#include <assert.h>
 
 using namespace std;
 
@@ -112,6 +113,13 @@ namespace Catan {
 				if (node->CanPlaceChit()) {
 					node->chit = chitList[chitPos++];
 				}
+			}
+		}
+
+		void BoardGraph::UnMarkAll() {
+			BoardGraphForwardIterator it = BoardGraphForwardIterator(firstNodes);
+			while (it.HasNext()) {
+				it.Next()->marked = false;
 			}
 		}
 

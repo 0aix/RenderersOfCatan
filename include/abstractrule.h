@@ -5,6 +5,7 @@
 
 namespace Catan {
 	namespace Generate {
+		class BoardGraph;
 		class AbstractRule {
 			bool followStrictly;
 
@@ -12,7 +13,7 @@ namespace Catan {
 			AbstractRule(std::map<std::string, bool> &boolMap);
 
 		public:
-			virtual bool IsFollowed(/* TODO */) = 0;
+			virtual bool IsFollowed(BoardGraph &graph) = 0;
 		};
 
 		class RuleParseException {};

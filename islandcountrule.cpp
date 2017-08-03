@@ -1,4 +1,5 @@
 #include "include/islandcountrule.h"
+#include "include/boardgraph.h"
 #include <map>
 #include <string>
 
@@ -20,7 +21,8 @@ namespace Catan {
 			}
 		}
 
-		bool IslandCountRule::IsFollowed() {
+		bool IslandCountRule::IsFollowed(BoardGraph &graph) {
+			// TODO
 			return true;
 		}
 	}

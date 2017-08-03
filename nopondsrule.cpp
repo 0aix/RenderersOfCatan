@@ -1,4 +1,5 @@
 #include "include/nopondsrule.h"
+#include "include/boardgraph.h"
 #include <map>
 #include <string>
 
@@ -10,7 +11,7 @@ namespace Catan {
 			// nothing
 		}
 
-		bool NoPondsRule::IsFollowed() {
+		bool NoPondsRule::IsFollowed(BoardGraph &graph) {
 			return true;
 		}
 	}

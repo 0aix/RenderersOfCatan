@@ -15,9 +15,11 @@ const int CONFIG_PARSE_ERROR_CODE = 2;
 
 // Command line arguments
 // -c [Config file path]
+// -r [text|image]
 int main(int argv, char **argc)
 {
 	Catan::Generate::Config config;
+	string renderType = "text";
 	// Handle command line arguments
 	for (int i = 1; i < argv; i++) {
 		const char *arg = argc[i];
@@ -36,17 +38,26 @@ int main(int argv, char **argc)
 				cerr << "Usage: -c [Config File Path]" << endl;
 				return CLI_ARG_ERROR_CODE;
 			}
+		} else if (strcmp(arg, "-r") == 0) {
+			i++;
+			if (i != argv) {
+				renderType = argc[i];
+			} else {
+				cerr << "Usage: -r [text|image]" << endl;
+				return CLI_ARG_ERROR_CODE;
+			}
 		}
 	}
 
 	Catan::Generate::BoardGraph graph = Catan::Generate::BoardGraph(&config);
 	graph.Randomize();
 
-    if (Catan::Draw::Initialize())
-    {
+	if (renderType == "text") {
+		
+	} else if (renderType == "image" && Catan::Draw::Initialize()) {
         Catan::Draw::Render();
         Catan::Draw::Uninitialize();
-    }
+	}
 
     return 0;
 }

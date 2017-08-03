@@ -10,7 +10,7 @@ namespace Catan {
 				neighbours.push_back(NULL);
 			}
 
-			isMarked = false;
+			marked = false;
 			type = NONE;
 			chit = -1;
 		}

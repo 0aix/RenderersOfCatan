@@ -1,5 +1,6 @@
 #pragma once
 #include "abstractrule.h"
+#include "boardgraph.h"
 #include <string>
 #include <map>
 
@@ -17,7 +18,7 @@ namespace Catan {
 		public:
 			NoSpecialChitsTouchingRule(std::map<std::string, bool> &boolMap);
 
-			bool IsFollowed();
+			bool IsFollowed(BoardGraph &graph);
 		};
 	}
 }

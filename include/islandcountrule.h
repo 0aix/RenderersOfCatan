@@ -1,5 +1,6 @@
 #pragma once
 #include "abstractrule.h"
+#include "boardgraph.h"
 #include <map>
 #include <string>
 
@@ -21,7 +22,7 @@ namespace Catan {
 		public:
 			IslandCountRule(std::map<std::string, int> &intMap, std::map<std::string, bool> &boolMap);
 
-			bool IsFollowed();
+			bool IsFollowed(BoardGraph &graph);
 		};
 	}
 }
