@@ -13,6 +13,7 @@ namespace Catan
 
         void Render();
         void DrawTile(float cx, float cy, float length, float margin, int type);
+        void DrawChit(float cx, float cy, float radius, float margin, int num);
 
         void SaveToFile(GLuint textureID);
         void Preview(GLuint textureID);
