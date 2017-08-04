@@ -22,9 +22,16 @@ namespace Catan {
 
 		void PopulateWithHex(char **buffer, int rowIndex, int colIndex, BoardNode *node) {
 			PopulateLineString(buffer, rowIndex++, colIndex, "   _____  ");
-      PopulateLineString(buffer, rowIndex++, colIndex, "  /     \\ ");
-      PopulateLineString(buffer, rowIndex++, colIndex, " /       \\");
-      PopulateLineString(buffer, rowIndex++, colIndex, " \\       /");
+
+      string filling = node->type == WATER ? "~~~~~" : "     ";
+      PopulateLineString(buffer, rowIndex++, colIndex, "  /" + filling + "\\ ");
+      
+      filling = node->type == WATER ? "~~~~~~~" : node->type == DESERT ? "       " : "T O D O";
+      PopulateLineString(buffer, rowIndex++, colIndex, " /" + filling + "\\");
+      
+      filling = node->type == WATER ? "~~~~~~~" : node->type == DESERT ? "       " : "T O D O";
+      PopulateLineString(buffer, rowIndex++, colIndex, " \\" + filling + "/");
+      
       PopulateLineString(buffer, rowIndex++, colIndex, "  \\_____/ ");
 		}
 

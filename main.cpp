@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <cstdlib>
 #include "include/config.h"
 #include "include/abstractrule.h"
 #include "include/boardgraph.h"
@@ -19,6 +20,7 @@ const int CONFIG_PARSE_ERROR_CODE = 2;
 // -r [text|image]
 int main(int argv, char **argc)
 {
+  srand(time(NULL));
 	Catan::Generate::Config config;
 	string renderType = "text";
 	// Handle command line arguments

@@ -2,9 +2,11 @@
 #include "include/config.h"
 #include "include/boardnode.h"
 #include <algorithm>
+#include <cstdlib>
 #include <vector>
 #include <iostream>
 #include <assert.h>
+#include <cstdlib>
 
 using namespace std;
 
@@ -82,6 +84,10 @@ namespace Catan {
 			return *(new BoardGraphForwardIterator(firstNodes));
 		}
 
+    int RandomIterator(int i) {
+      return rand() % i;
+    }
+
 		void BoardGraph::Randomize() {
 			BoardGraphForwardIterator it = BoardGraphForwardIterator(firstNodes);
 			int tilePos = 0;
@@ -103,8 +109,8 @@ namespace Catan {
 				}
 			}
 
-			random_shuffle(typesList.begin(), typesList.end());
-			random_shuffle(chitList.begin(), chitList.end());
+			random_shuffle(typesList.begin(), typesList.end(), RandomIterator);
+			random_shuffle(chitList.begin(), chitList.end(), RandomIterator);
 
 			while (it.HasNext()) {
 				BoardNode *node = it.Next();
