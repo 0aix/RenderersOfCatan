@@ -20,16 +20,45 @@ namespace Catan {
 			}
 		}
 
+    string GetStringForChit(int chit) {
+      if (chit >= 10) {
+        return "  " + to_string(chit / 10) + " " + to_string(chit % 10) + "  ";
+      } else if (chit > 0) {
+        return "   " + to_string(chit) + "   ";
+      } else {
+        return "       ";
+      }
+    }
+
+    string GetStringForType(TileType t) {
+      switch (t) {
+      case FIELD:
+        return "SHP";
+      case MINE:
+        return "MNE";
+      case MOUNTAIN:
+        return "MTN";
+      case WHEAT:
+        return "WHT";
+      case FOREST:
+        return "FST";
+      case GOLD:
+        return "GLD";
+      default:
+        return "   ";
+      }
+    } 
+
 		void PopulateWithHex(char **buffer, int rowIndex, int colIndex, BoardNode *node) {
 			PopulateLineString(buffer, rowIndex++, colIndex, "   _____  ");
 
       string filling = node->type == WATER ? "~~~~~" : "     ";
       PopulateLineString(buffer, rowIndex++, colIndex, "  /" + filling + "\\ ");
       
-      filling = node->type == WATER ? "~~~~~~~" : node->type == DESERT ? "       " : "T O D O";
+      filling = node->type == WATER ? "~~~~~~~" : node->type == DESERT ? "       " : "  " + GetStringForType(node->type) + "  ";
       PopulateLineString(buffer, rowIndex++, colIndex, " /" + filling + "\\");
       
-      filling = node->type == WATER ? "~~~~~~~" : node->type == DESERT ? "       " : "T O D O";
+      filling = node->type == WATER ? "~~~~~~~" : node->type == DESERT ? "       " : GetStringForChit(node->chit);
       PopulateLineString(buffer, rowIndex++, colIndex, " \\" + filling + "/");
       
       PopulateLineString(buffer, rowIndex++, colIndex, "  \\_____/ ");
