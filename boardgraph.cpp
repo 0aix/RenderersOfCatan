@@ -116,6 +116,22 @@ namespace Catan {
 			}
 		}
 
+		int BoardGraph::BoardHeight() {
+			int height = 0;
+			for (int col : config->boardColumns) {
+				height = max(height, col);
+			}
+			return height;
+		}
+
+		int BoardGraph::BoardWidth() {
+			return firstNodes.size();
+		}
+
+		int BoardGraph::ColumnHeight(int index) {
+			return config->boardColumns[index];
+		}
+
 		void BoardGraph::UnMarkAll() {
 			BoardGraphForwardIterator it = BoardGraphForwardIterator(firstNodes);
 			while (it.HasNext()) {

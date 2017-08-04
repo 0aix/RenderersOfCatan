@@ -11,6 +11,9 @@ namespace Catan {
 			BoardGraph(Config *config);
 			BoardGraphForwardIterator &ForwardIterator();
 			void Randomize();
+			int BoardHeight();
+			int BoardWidth();
+			int ColumnHeight(int index);
 
 		private:
 			std::vector<BoardNode*> firstNodes;

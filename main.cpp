@@ -7,6 +7,7 @@
 #include "include/config.h"
 #include "include/abstractrule.h"
 #include "include/boardgraph.h"
+#include "include/textrenderer.h"
 
 using namespace std;
 
@@ -53,7 +54,7 @@ int main(int argv, char **argc)
 	graph.Randomize();
 
 	if (renderType == "text") {
-		
+		Catan::Draw::RenderAsText(graph);
 	} else if (renderType == "image" && Catan::Draw::Initialize()) {
         Catan::Draw::Render();
         Catan::Draw::Uninitialize();
