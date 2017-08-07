@@ -1,5 +1,5 @@
 # OBJS specifies which files to compile as part of the project
-OBJS = shader.cpp draw.cpp main.cpp
+OBJS = boardgraph.cpp boardnode.cpp islandcountrule.cpp nochitstouchingrule.cpp nopondsrule.cpp abstractrule.cpp config.cpp shader.cpp draw.cpp main.cpp
 
 # CC specifies which compiler we're using
 CC = g++
@@ -12,7 +12,7 @@ LIBRARY_PATHS = -L/usr/local/lib -I/opt/X11/lib
 
 # COMPILER_FLAGS specifies the additional compilation options we're using
 # -w suppresses all warnings
-COMPILER_FLAGS = -w
+COMPILER_FLAGS = -w -std=c++14 -DRAPIDJSON_HAS_CXX11_RANGE_FOR=1
 
 # LINKER_FLAGS specifies the libraries we're linking against
 # Cocoa, IOKit, and CoreVideo are needed for static GLFW3.
