@@ -9,10 +9,6 @@ using namespace std;
 
 namespace Catan {
 	namespace Generate {
-		NoSpecialChitsTouchingRule::NoSpecialChitsTouchingRule(map<string, bool> &boolMap) : AbstractRule(boolMap) {
-			// nothing
-		}
-
 		bool IsSpecialChit(int chit) {
 			return chit == 6 || chit == 8;
 		}
@@ -23,8 +19,7 @@ namespace Catan {
 				BoardNode *node = it.Next();
 				if (IsSpecialChit(node->chit)) {
 					// Check Neighbours
-					vector<BoardNode*> neighbours = node->NonNullNeighbours();
-					for (BoardNode *neighbour : neighbours) {
+					for (BoardNode *neighbour : node->NonNullNeighbours()) {
 						if (IsSpecialChit(neighbour->chit)) {
 							return false;
 						}

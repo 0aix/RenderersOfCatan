@@ -5,16 +5,6 @@ using namespace std;
 
 namespace Catan {
 	namespace Generate {
-		BoardNode::BoardNode() {
-			for (int i = 0; i < NEIGHBOUR_COUNT; i++) {
-				neighbours.push_back(NULL);
-			}
-
-			marked = false;
-			type = NONE;
-			chit = -1;
-		}
-
 		int BoardNode::NumNeighbours() {
 			return NEIGHBOUR_COUNT;
 		}

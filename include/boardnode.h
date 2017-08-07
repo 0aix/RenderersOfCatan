@@ -39,7 +39,16 @@ namespace Catan {
 			TileType type;
 			int chit;
 
-			BoardNode();
+			BoardNode() {
+        for (int i = 0; i < NEIGHBOUR_COUNT; i++) {
+          neighbours.push_back(NULL);
+        }
+
+        marked = false;
+        type = NONE;
+        chit = -1;
+      }
+      
 			int NumNeighbours();
 			std::vector<BoardNode*> NonNullNeighbours();
 			bool CanPlaceChit();

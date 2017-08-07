@@ -16,7 +16,7 @@ namespace Catan {
 	namespace Generate {
 		class NoPondsRule : public AbstractRule {
 		public:
-			NoPondsRule(std::map<std::string, bool> &boolMap);
+			NoPondsRule(std::map<std::string, bool> &boolMap) : AbstractRule(boolMap) {};
 
 			bool IsFollowed(BoardGraph &graph);
 		};

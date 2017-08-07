@@ -16,7 +16,7 @@ namespace Catan {
 	namespace Generate {
 		class NoSpecialChitsTouchingRule : public AbstractRule {
 		public:
-			NoSpecialChitsTouchingRule(std::map<std::string, bool> &boolMap);
+			NoSpecialChitsTouchingRule(std::map<std::string, bool> &boolMap) : AbstractRule(boolMap){}
 
 			bool IsFollowed(BoardGraph &graph);
 		};

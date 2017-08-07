@@ -26,6 +26,11 @@ namespace Catan {
 			for (int i = 1; i < firstNodes.size(); i++) {
 				ColumnLink(boardSpec[i - 1], firstNodes[i - 1], boardSpec[i], firstNodes[i]);
 			}
+
+      boardHeight = 0;
+      for (int col : config->boardColumns) {
+        boardHeight = max(boardHeight, col);
+      }
 		}
 
 		BoardNode *BoardGraph::GenerateRow(int size) {
@@ -52,14 +57,12 @@ namespace Catan {
 			BoardNode *leftCurrent = firstLeft;
 			BoardNode *rightCurrent = firstRight;
 
-			while (positionLeft > 0) {
+			for (; positionLeft > 0; positionLeft--) {
 				leftCurrent = leftCurrent->neighbours[S_INDEX];
-				positionLeft--;
 			}
 
-			while (positionRight > 0) {
+			for (; positionRight > 0; positionRight--) {
 				rightCurrent = rightCurrent->neighbours[S_INDEX];
-				positionRight--;
 			}
 
 			// Start stitching the nodes together
@@ -84,10 +87,6 @@ namespace Catan {
 			return *(new BoardGraphForwardIterator(firstNodes));
 		}
 
-    int RandomIterator(int i) {
-      return rand() % i;
-    }
-
 		void BoardGraph::Randomize() {
 			BoardGraphForwardIterator it = BoardGraphForwardIterator(firstNodes);
 			int tilePos = 0;
@@ -109,6 +108,11 @@ namespace Catan {
 				}
 			}
 
+      auto RandomIterator = [](int i)
+      {
+          return rand() % i;
+      };
+
 			random_shuffle(typesList.begin(), typesList.end(), RandomIterator);
 			random_shuffle(chitList.begin(), chitList.end(), RandomIterator);
 
@@ -123,11 +127,7 @@ namespace Catan {
 		}
 
 		int BoardGraph::BoardHeight() {
-			int height = 0;
-			for (int col : config->boardColumns) {
-				height = max(height, col);
-			}
-			return height;
+			return boardHeight;
 		}
 
 		int BoardGraph::BoardWidth() {
