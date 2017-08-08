@@ -47,7 +47,7 @@ namespace Catan {
       default:
         return "   ";
       }
-    } 
+    }
 
 		void PopulateWithHex(char **buffer, int rowIndex, int colIndex, BoardNode *node) {
 			PopulateLineString(buffer, rowIndex++, colIndex, "   _____  ");
