@@ -8,6 +8,7 @@
 #include <iostream>
 #include <assert.h>
 #include <cstdlib>
+#include <utility>
 
 using namespace std;
 
@@ -121,6 +122,52 @@ namespace Catan {
 			return size;
 		}
 
+		ShoreEdge *BoardGraph::RemoveShoreLineEdge(ShoreEdge *current) {
+			if (current == current->next) {
+				current->prev = NULL;
+				current->next = NULL;
+				return NULL;
+			}
+
+			current->prev->next = current->next;
+			current->prev->originalRight = false;
+			current->next->prev = current->prev;
+			current->next->originalLeft = false;
+
+			ShoreEdge *nextHead = current->next;
+			
+			return nextHead;
+		}
+
+		pair<ShoreEdge*, int> BoardGraph::RemoveShoreLineEdge(ShoreEdge *edge, int rand, Port *port) {
+			ShoreEdge *current = edge;
+
+			for (int i = 0; i < rand; i++) {
+				current = current->next;
+			}
+
+			int removed = 1;
+
+			// Need to remove current			
+			BoardNode *chosenNode = current->attachedNode;
+			chosenNode->AddPort(current->index, port);
+
+			ShoreEdge *nextHead = RemoveShoreLineEdge(current);
+
+			if (current->originalLeft) {
+				// Remove left
+				nextHead = RemoveShoreLineEdge(current->prev);
+				removed++;
+			}
+
+			if (current->originalRight) {
+				nextHead = RemoveShoreLineEdge(current->next);
+				removed++;
+			}
+
+			return make_pair(nextHead, removed);
+		}
+
 		void BoardGraph::RandomizePorts() {
 			vector<Port*> ports = config->ports;
 
@@ -136,10 +183,48 @@ namespace Catan {
 
 			// Generate shorelist
 			vector<BoardNode*> islandHeaders = GetIslands(NotWater);
+			vector<ShoreEdge*> lines;
+			int *weightArray = new int[islandHeaders.size()];
+			int prev = 0;
+			int total = 0;
 
-			for (BoardNode *header : islandHeaders) {
-				ShoreEdge *edge = header->GenerateShoreLine();
+			for (int i = 0; i < islandHeaders.size(); i++) {
+				ShoreEdge *edge = islandHeaders[i]->GenerateShoreLine();
+				lines.push_back(edge);
+				int size = ShoreLineSize(edge);
+				weightArray[i] = prev + size;
+				total += size;
+				prev = weightArray[i];
 			}
+
+			// Place the ports somewhere
+			int coastLinesLeft = islandHeaders.size();
+			int portPosition = 0;
+
+			while (coastLinesLeft > 0 && portPosition < ports.size()) {
+				int weight = rand() % total + 1;
+				int shoreLineIndex = -1;
+				for (int i = 0; i < islandHeaders.size(); i++) {
+					if (weight <= weightArray[i]) {
+						shoreLineIndex = i;
+						break;
+					}
+				}
+
+				assert(shoreLineIndex != -1);
+				ShoreEdge *chosenLine = lines[shoreLineIndex];
+				pair<ShoreEdge*, int> result = RemoveShoreLineEdge(chosenLine, weightArray[shoreLineIndex] - weight, ports[portPosition++]);
+
+				lines[shoreLineIndex] = result.first;
+				if (result.first == NULL) {
+					coastLinesLeft--;
+				}
+
+				weightArray[shoreLineIndex] -= result.second;
+				total -= result.second;
+			}
+			
+			delete [] weightArray;
 		}
 
 		void BoardGraph::ClearPorts() {

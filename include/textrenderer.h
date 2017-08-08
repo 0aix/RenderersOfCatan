@@ -4,6 +4,8 @@
 #include "boardnode.h"
 #include <iostream>
 #include <string>
+#include <vector>
+#include <utility>
 
 using namespace std;
 using namespace Catan::Generate;
@@ -62,6 +64,15 @@ namespace Catan {
       PopulateLineString(buffer, rowIndex++, colIndex, " \\" + filling + "/");
       
       PopulateLineString(buffer, rowIndex++, colIndex, "  \\_____/ ");
+
+      vector<pair<Port*, int>> pairs = node->NonNullPorts();
+      if (pairs.size() > 0) {
+        cout << "Ports for: " << GetStringForType(node->type) << " (" <<  node->chit << ")" << endl;
+        for (pair<Port*, int> p : pairs) {
+          Port *port = p.first;
+          cout << "     " << port->name << " @ " << port->trade << ":1 " << " location: " << p.second << endl;
+        }
+      }
 		}
 
 		void RenderAsText(BoardGraph &graph) {

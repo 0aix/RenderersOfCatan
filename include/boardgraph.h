@@ -32,6 +32,8 @@ namespace Catan {
 			void MarkAllIslandNodesFromSource(BoardNode *source, bool (*test)(BoardNode*));
 			void ClearPorts();
 			int ShoreLineSize(ShoreEdge *edge);
+			ShoreEdge *RemoveShoreLineEdge(ShoreEdge *current);
+			std::pair<ShoreEdge*, int> RemoveShoreLineEdge(ShoreEdge *edge, int rand, Port *port);
 		};
 
 		// Used to traverse a BoardGraph, column by column

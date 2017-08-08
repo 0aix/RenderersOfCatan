@@ -1,6 +1,7 @@
 #include "include/boardnode.h"
 #include <vector>
 #include <assert.h>
+#include <utility>
 
 using namespace std;
 
@@ -54,10 +55,6 @@ namespace Catan {
 				}
 			}
 
-			assert(firstEdge != NULL);
-			assert(currentNode != NULL);
-			assert(currentEdge != NULL);
-
 			while (true) {
 				// Get next edge
 				currentIndex = (currentIndex + 1) % NEIGHBOUR_COUNT;
@@ -68,16 +65,36 @@ namespace Catan {
 					currentIndex = (currentIndex + 3) % NEIGHBOUR_COUNT;
 				} else if (firstEdge->attachedNode == currentNode && firstEdge->index == currentIndex){
 					currentEdge->next = firstEdge;
+					firstEdge->prev = currentEdge;
 					break;
 				} else {
 					// Generate Edge
 					ShoreEdge *nextEdge = new ShoreEdge(currentNode, currentIndex);
 					currentEdge->next = nextEdge;
+					nextEdge->prev = currentEdge;
 					currentEdge = nextEdge;
 				}
 			}
 
 			return firstEdge;
+		}
+
+		void BoardNode::AddPort(int index, Port *port) {
+			ports[index] = port;
+			port->attachedNode = this;
+		}
+
+		vector<pair<Port*, int>> BoardNode::NonNullPorts() {
+			vector<pair<Port*, int>> nonNullPorts;
+
+			for (int i = 0; i < NEIGHBOUR_COUNT; i++) {
+				Port *port = ports[i];
+				if (port != NULL) {
+					nonNullPorts.push_back(make_pair(port, i)); 
+				}
+			}
+
+			return nonNullPorts;
 		}
 	}
 }

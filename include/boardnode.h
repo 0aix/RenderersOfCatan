@@ -2,6 +2,7 @@
 #define NEIGHBOUR_COUNT 6
 #include <vector>
 #include <string>
+#include <utility>
 
 namespace Catan {
 	namespace Generate {
@@ -59,7 +60,9 @@ namespace Catan {
 			bool CanPlaceChit();
 			void ClearPorts();
 			ShoreEdge *GenerateShoreLine();
-		
+			void AddPort(int index, Port *port);
+			std::vector<std::pair<Port*, int>> NonNullPorts(); 
+
 		private:
 			bool IsWater(BoardNode *node);
 		};
@@ -75,9 +78,12 @@ namespace Catan {
 		struct ShoreEdge {
 			BoardNode *attachedNode;
 			ShoreEdge *next;
+			ShoreEdge *prev;
 			int index;
+			bool originalLeft;
+			bool originalRight;
 
-			ShoreEdge(BoardNode *attachedNode, int index) : attachedNode(attachedNode), index(index) {} 
+			ShoreEdge(BoardNode *attachedNode, int index) : attachedNode(attachedNode), index(index), originalLeft(true), originalRight(true) {} 
 		};
 	}
 }
