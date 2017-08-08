@@ -14,6 +14,8 @@ namespace Catan {
 
 		public:
 			virtual bool IsFollowed(BoardGraph &graph) = 0;
+
+			bool FollowStrictly();
 		};
 
 		class RuleParseException {};

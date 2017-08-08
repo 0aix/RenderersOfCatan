@@ -19,5 +19,9 @@ namespace Catan {
 				throw RuleParseException();
 			}
 		}
+
+		bool AbstractRule::FollowStrictly() {
+			return followStrictly;
+		}
 	}
 }

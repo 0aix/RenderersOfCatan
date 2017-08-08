@@ -1,6 +1,7 @@
 #include "include/boardgraph.h"
 #include "include/config.h"
 #include "include/boardnode.h"
+#include "include/abstractrule.h"
 #include <algorithm>
 #include <cstdlib>
 #include <vector>
@@ -87,6 +88,24 @@ namespace Catan {
 			return *(new BoardGraphForwardIterator(firstNodes));
 		}
 
+		bool BoardGraph::FollowsAllRules() {
+			for (AbstractRule *rule : config->rules) {
+				if (rule->FollowStrictly() && !rule->IsFollowed(*this)) {
+					return false;
+				}
+			}
+			return true;
+		}
+
+		void BoardGraph::RandomizeWithRules() {
+			int i = 0;
+			do {
+				i++;
+				Randomize();
+			} while (!FollowsAllRules());
+			cout << "Took " << i << " tries" << endl;
+		}
+
 		void BoardGraph::Randomize() {
 			BoardGraphForwardIterator it = BoardGraphForwardIterator(firstNodes);
 			int tilePos = 0;
@@ -108,8 +127,7 @@ namespace Catan {
 				}
 			}
 
-      auto RandomIterator = [](int i)
-      {
+      auto RandomIterator = [](int i) {
           return rand() % i;
       };
 

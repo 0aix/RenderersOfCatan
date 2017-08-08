@@ -10,7 +10,11 @@ namespace Catan {
 		public:
 			BoardGraph(Config *config);
 			BoardGraphForwardIterator &ForwardIterator();
+			// Generates a new board once, without checking any rules
 			void Randomize();
+			// Generates a new board by obeying rules 
+			void RandomizeWithRules();
+			bool FollowsAllRules();
 			int BoardHeight();
 			int BoardWidth();
 			int ColumnHeight(int index);
