@@ -103,7 +103,51 @@ namespace Catan {
 				i++;
 				Randomize();
 			} while (!FollowsAllRules());
-			cout << "Took " << i << " tries" << endl;
+			ClearPorts();
+			RandomizePorts();
+		}
+
+		int BoardGraph::ShoreLineSize(ShoreEdge *edge) {
+			ShoreEdge *first = edge;
+			ShoreEdge *current = first->next;
+			int size = 1;
+
+			while (current != first) {
+				size++;
+				assert(current != NULL);
+				current = current->next;
+			}
+
+			return size;
+		}
+
+		void BoardGraph::RandomizePorts() {
+			vector<Port*> ports = config->ports;
+
+			auto RandomIterator = [](int i) {
+          return rand() % i;
+      };
+
+      auto NotWater = [](BoardNode *node) {
+      	return node->type != WATER;
+      };
+
+			random_shuffle(ports.begin(), ports.end(), RandomIterator);
+
+			// Generate shorelist
+			vector<BoardNode*> islandHeaders = GetIslands(NotWater);
+
+			for (BoardNode *header : islandHeaders) {
+				ShoreEdge *edge = header->GenerateShoreLine();
+			}
+		}
+
+		void BoardGraph::ClearPorts() {
+			auto it = BoardGraphForwardIterator(firstNodes);
+
+			while (it.HasNext()) {
+				it.Next()->ClearPorts();
+			}
 		}
 
 		void BoardGraph::Randomize() {
@@ -140,6 +184,39 @@ namespace Catan {
 				
 				if (node->CanPlaceChit()) {
 					node->chit = chitList[chitPos++];
+				}
+			}
+		}
+
+		vector<BoardNode*> BoardGraph::GetIslands(bool (*test)(BoardNode*)) {
+			vector<BoardNode*> islandHeaders;
+
+			auto it = ForwardIterator();
+			while (it.HasNext()) {
+				BoardNode *node = it.Next();
+
+				if (!node->marked) {
+					node->marked = true;
+					if ((*test)(node)) {
+						islandHeaders.push_back(node);
+						MarkAllIslandNodesFromSource(node, test);
+					}
+				}
+			}
+
+			UnMarkAll();
+			return islandHeaders;
+		}
+
+		// Assumes source has already been marked
+		// DFS
+		void BoardGraph::MarkAllIslandNodesFromSource(BoardNode *source, bool (*test)(BoardNode*)) {
+			for (BoardNode *neighbour : source->NonNullNeighbours()) {
+				if (!neighbour->marked) {
+					neighbour->marked = true;
+					if ((*test)(neighbour)) {
+						MarkAllIslandNodesFromSource(neighbour, test);
+					}
 				}
 			}
 		}

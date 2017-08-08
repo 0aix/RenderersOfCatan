@@ -96,6 +96,19 @@ namespace Catan {
 				AbstractRule *rule = GenerateRule(stringMap["name"], intMap, boolMap, stringMap);
 				rules.push_back(rule);
 			}
+
+      const Value &portsArray = doc["ports"];
+
+      for (SizeType i = 0; i < portsArray.Size(); i++) {
+        auto obj = portsArray[i].GetObject();
+        int trade = obj.FindMember("trade")->value.GetInt();
+        int count = obj.FindMember("count")->value.GetInt();
+        string resource = obj.FindMember("resource")->value.GetString();
+
+        for (int j = 0; j < count; j++) {
+          ports.push_back(new Port(NULL, trade, resource));
+        }
+      }
 		}
 
 		// Factory method used to generate the rules from the JSON... as more rules are added,

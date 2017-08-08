@@ -14,10 +14,12 @@ namespace Catan {
 			void Randomize();
 			// Generates a new board by obeying rules 
 			void RandomizeWithRules();
+			void RandomizePorts();
 			bool FollowsAllRules();
 			int BoardHeight();
 			int BoardWidth();
 			int ColumnHeight(int index);
+			std::vector<BoardNode*> GetIslands(bool (*test)(BoardNode*));
 
 		private:
 			std::vector<BoardNode*> firstNodes;
@@ -27,6 +29,9 @@ namespace Catan {
 			BoardNode *GenerateRow(int size);
 			void ColumnLink(int leftSize, BoardNode *firstLeft, int rightSize, BoardNode *firstRight);
 			void UnMarkAll();
+			void MarkAllIslandNodesFromSource(BoardNode *source, bool (*test)(BoardNode*));
+			void ClearPorts();
+			int ShoreLineSize(ShoreEdge *edge);
 		};
 
 		// Used to traverse a BoardGraph, column by column

@@ -14,5 +14,37 @@
 			"name" : "NoSpecialChitsTouching",
 			"follow_strictly" : true
 		}
+	],
+	"ports" : [
+		{
+			"trade" : 3,
+			"count" : 3,
+			"resource" : "?"
+		},
+		{
+			"trade" : 2,
+			"count" : 1,
+			"resource" : "brick"
+		},
+		{
+			"trade" : 2,
+			"count" : 1,
+			"resource" : "wheat"
+		},
+		{
+			"trade" : 2,
+			"count" : 1,
+			"resource" : "sheep"
+		},
+		{
+			"trade" : 2,
+			"count" : 1,
+			"resource" : "ore"
+		},
+		{
+			"trade" : 2,
+			"count" : 1,
+			"resource" : "wood"
+		}
 	]
 }

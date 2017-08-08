@@ -38,6 +38,7 @@ namespace Catan {
 			std::vector<int> boardColumns;
 			std::vector<int> chits;
 			std::vector<AbstractRule*> rules;
+			std::vector<Port*> ports;
 
 			Config(const char *json);
 			Config();
