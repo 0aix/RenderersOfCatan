@@ -55,7 +55,7 @@ int main(int argv, char **argc)
 
 	Catan::Generate::BoardGraph graph = Catan::Generate::BoardGraph(&config);
 	graph.RandomizeWithRules();
-Catan::Draw::RenderAsText(graph);
+  Catan::Draw::RenderAsText(graph);
 	if (renderType == "text") {
 		Catan::Draw::RenderAsText(graph);
 	} else if (renderType == "image" && Catan::Draw::Initialize()) {

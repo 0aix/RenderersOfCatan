@@ -57,11 +57,21 @@ namespace Catan {
 		};
 
 		struct Port {
+			enum PortType {
+				// 2:1
+				BRICK,
+				WHEAT,
+				SHEEP,
+				ORE,
+				WOOD,
+				// 3:1
+				ANY
+			};
 			BoardNode *attachedNode;
-			int trade;
 			std::string name;
+			PortType type;
 
-			Port(BoardNode *node, int trade, std::string name) : attachedNode(node), trade(trade), name(name) {}
+			Port(BoardNode *node, std::string name, PortType type) : attachedNode(node), type(type) {}
 		};
 
 		struct ShoreEdge {

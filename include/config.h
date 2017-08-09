@@ -44,23 +44,19 @@ namespace Catan {
 			Config();
 			int TileCount();
 			int TileCountFromType(TileType t);
+
 		private:
 			int FindMaxColSize();
-
 			bool CheckNonNegative(std::vector<int> &v);
-
 			bool CheckChits();
-
 			int Sum(std::vector<int> &v);
-
 			bool CheckBoardSize();
-
 			bool CheckOddDelta();
-
 			AbstractRule *GenerateRule(std::string name, 
 				std::map<std::string, int> &intMap, 
 				std::map<std::string, bool> &boolMap, 
 				std::map<std::string, std::string> &stringMap);
+			Port::PortType TranslatePortType(std::string name);
 		};
 
 		// Config throws this when it encounters an error 

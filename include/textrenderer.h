@@ -70,7 +70,7 @@ namespace Catan {
         cout << "Ports for: " << GetStringForType(node->type) << " (" <<  node->chit << ")" << endl;
         for (pair<Port*, int> p : pairs) {
           Port *port = p.first;
-          cout << "     " << port->name << " @ " << port->trade << ":1 " << " location: " << p.second << endl;
+          cout << "     " << port->name << " @ " << (port->type == Port::ANY ? "3:1" : "2:1") << " location: " << p.second << endl;
         }
       }
 		}

@@ -101,15 +101,33 @@ namespace Catan {
 
       for (SizeType i = 0; i < portsArray.Size(); i++) {
         auto obj = portsArray[i].GetObject();
-        int trade = obj.FindMember("trade")->value.GetInt();
         int count = obj.FindMember("count")->value.GetInt();
         string resource = obj.FindMember("resource")->value.GetString();
 
         for (int j = 0; j < count; j++) {
-          ports.push_back(new Port(NULL, trade, resource));
+          ports.push_back(new Port(NULL, resource, TranslatePortType(resource)));
         }
       }
 		}
+
+    Port::PortType Config::TranslatePortType(std::string name) {
+      if (name == "wood") {
+        return Port::WOOD;
+      } else if (name == "ore") {
+        return Port::ORE;
+      } else if (name == "sheep") {
+        return Port::SHEEP;
+      } else if (name == "wheat") {
+        return Port::WHEAT;
+      } else if (name == "brick") {
+        return Port::BRICK;
+      } else if (name == "?") {
+        return Port::ANY;
+      } else {
+        cerr << "[Config File ERROR] Unknown port type '" << name << "'" << endl;
+        throw ConfigParseException();  
+      }
+    }
 
 		// Factory method used to generate the rules from the JSON... as more rules are added,
 		// this method should be updated. In the future we can design a better system that requires less
