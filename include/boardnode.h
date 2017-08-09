@@ -71,7 +71,7 @@ namespace Catan {
 			std::string name;
 			PortType type;
 
-			Port(BoardNode *node, std::string name, PortType type) : attachedNode(node), type(type) {}
+			Port(BoardNode *node, std::string name, PortType type) : attachedNode(node), name(name), type(type) {}
 		};
 
 		struct ShoreEdge {
