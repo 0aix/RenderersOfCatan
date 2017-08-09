@@ -1,0 +1,34 @@
+{
+	"board" : [8, 9, 10, 9, 10, 9, 8],
+	"chits" : [0, 2, 3, 4, 5, 5, 0, 5, 5, 4, 4, 3],
+	"water_count" : 21,
+	"desert_count" : 3,
+	"gold_count" : 4,
+	"forest_count" : 7,
+	"mine_count" : 7,
+	"mountain_count" : 7,
+	"wheat_count" : 7,
+	"fields_count" : 7,
+	"rules" : [
+		{
+			"name" : "NoPonds",
+			"follow_strictly" : true
+		},
+		{
+			"name" : "NoSpecialChitsTouching",
+			"follow_strictly" : true
+		},
+		{
+			"name" : "IslandCount",
+			"follow_strictly" : false,
+			"min" : 2
+		}
+	],
+	"ports" : [
+		{
+			"trade" : 3, 
+			"count" : 5,
+			"resource" : "?"
+		}
+	]
+}
