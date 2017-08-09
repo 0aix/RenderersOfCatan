@@ -19,7 +19,7 @@ COMPILER_FLAGS = -w -std=c++14 -DRAPIDJSON_HAS_CXX11_RANGE_FOR=1
 LINKER_FLAGS = -framework OpenGL -lglfw -lglew
 
 # OBJ_NAME specifies the name of our exectuable
-OBJ_NAME = main
+OBJ_NAME = catangen
 
 #This is the target that compiles our executable
 all : $(OBJS)
