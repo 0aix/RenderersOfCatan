@@ -59,7 +59,7 @@ int main(int argv, char **argc)
 	Catan::Draw::RenderAsText(graph);
 	if (Catan::Draw::Initialize())
 	{
-		Catan::Draw::Render(graph, 200.0f, 50.0f, 2.5f, 1);
+		Catan::Draw::Render(graph, 200.0f, 50.0f, 2.5f, 4);
 		Catan::Draw::Uninitialize();
 	}
 
