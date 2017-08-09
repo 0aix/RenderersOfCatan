@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
+#include <unistd.h>
 #include "include/config.h"
 #include "include/abstractrule.h"
 #include "include/boardgraph.h"
@@ -16,50 +17,68 @@ const int CLI_ARG_ERROR_CODE = 1;
 const int CONFIG_PARSE_ERROR_CODE = 2; 
 
 // Command line arguments
-// -c [Config file path]
-// -r [text|image]
+// -c [Config file path]     
+// -l [float hex side length]
+// -r [float chit radius]    
+// -m [float margin size]    
+// -h
 
-int main(int argv, char **argc)
+int main(int argc, char **argv)
 {
   srand(time(NULL));
 	Catan::Generate::Config config;
-	string renderType = "text";
-	// Handle command line arguments
-	for (int i = 1; i < argv; i++) {
-		const char *arg = argc[i];
-		if (strcmp(arg, "-c") == 0) {
-			i++;
-			if (i != argv) {
-				cout << "Looking for config file at location: " << argc[i] << endl;
-				fstream fin(argc[i]);
-				string contents((istreambuf_iterator<char>(fin)), istreambuf_iterator<char>());
-				try {
-					config = Catan::Generate::Config(contents.c_str());
-				} catch (...) {
-					return CONFIG_PARSE_ERROR_CODE;
-				}
-			} else {
-				cerr << "Usage: -c [Config File Path]" << endl;
-				return CLI_ARG_ERROR_CODE;
-			}
-		} else if (strcmp(arg, "-r") == 0) {
-			i++;
-			if (i != argv) {
-				renderType = argc[i];
-			} else {
-				cerr << "Usage: -r [text|image]" << endl;
-				return CLI_ARG_ERROR_CODE;
-			}
-		}
-	}
+  fstream fin;
+  string contents;
 
-	Catan::Generate::BoardGraph graph = Catan::Generate::BoardGraph(&config);
+  float length = 400.0f;
+  float radius = 100.0f;
+  float margin = 5.0f;
+
+	// Handle command line arguments
+  int c;
+	while ((c = getopt(argc, argv, "c:l:r:m:h")) != -1) {
+    switch (c) {
+      case 'c':
+        fin = fstream(optarg);
+        contents = string((istreambuf_iterator<char>(fin)), istreambuf_iterator<char>());
+        try {
+          config = Catan::Generate::Config(contents.c_str());
+        } catch (...) {
+          return CONFIG_PARSE_ERROR_CODE;
+        }
+        break;
+      case 'l':
+        length = stof(optarg);
+        break;
+      case 'r':
+        radius = stof(optarg);
+        break;
+      case 'm':
+        margin = stof(optarg);
+        break;
+      case 'h':
+        cout << "Commands for catangen:" << endl;
+        cout << "-c [Config file path] (required)" << endl;
+        cout << "-l [float hex side length in pixels] (optional)" << endl;
+        cout << "-r [float chit radius length in pixels] (optional)" << endl;
+        cout << "-m [float margin size in pixels] (optional)" << endl;
+        cout << "-h (optional) Display help" << endl;
+        return 0;
+        break;
+    }
+  }
+	
+  if (!config.initialized) {
+    return CLI_ARG_ERROR_CODE;
+  }
+
+  Catan::Generate::BoardGraph graph = Catan::Generate::BoardGraph(&config);
 	graph.RandomizeWithRules();
 
 	Catan::Draw::RenderAsText(graph);
 	if (Catan::Draw::Initialize())
 	{
-		Catan::Draw::Render(graph, 200.0f, 50.0f, 2.5f, 4);
+		Catan::Draw::Render(graph, length, radius, margin, 4);
 		Catan::Draw::Uninitialize();
 	}
 

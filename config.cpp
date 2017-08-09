@@ -22,6 +22,7 @@ namespace Catan {
 		Config::Config(const char *json) {
 			Document doc;
 			doc.Parse(json);
+      initialized = true;
 
 			WATER_COUNT = doc["water_count"].GetInt();
 			DESERT_COUNT = doc["desert_count"].GetInt();
