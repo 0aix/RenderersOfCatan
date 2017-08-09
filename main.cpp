@@ -55,12 +55,12 @@ int main(int argv, char **argc)
 
 	Catan::Generate::BoardGraph graph = Catan::Generate::BoardGraph(&config);
 	graph.RandomizeWithRules();
-Catan::Draw::RenderAsText(graph);
-	if (renderType == "text") {
-		Catan::Draw::RenderAsText(graph);
-	} else if (renderType == "image" && Catan::Draw::Initialize()) {
-        Catan::Draw::Render(graph, 400.0f, 100.0f, 5.0f, 4);
-        Catan::Draw::Uninitialize();
+
+	Catan::Draw::RenderAsText(graph);
+	if (Catan::Draw::Initialize())
+	{
+		Catan::Draw::Render(graph, 200.0f, 50.0f, 2.5f, 1);
+		Catan::Draw::Uninitialize();
 	}
 
     return 0;
