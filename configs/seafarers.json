@@ -19,11 +19,6 @@
 			"follow_strictly" : true
 		},
 		{
-			"name" : "IslandCount",
-			"follow_strictly" : false,
-			"min" : 2
-		},
-		{
 			"name" : "NoSuperGold",
 			"follow_strictly" : true
 		}
