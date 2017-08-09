@@ -60,7 +60,7 @@ namespace Catan {
       filling = node->type == WATER ? "~~~~~~~" : node->type == DESERT ? "       " : "  " + GetStringForType(node->type) + "  ";
       PopulateLineString(buffer, rowIndex++, colIndex, " /" + filling + "\\");
       
-      filling = node->type == WATER ? "~~~~~~~" : node->type == DESERT ? "       " : GetStringForChit(node->chit);
+      filling = node->type == WATER ? "~~~~~~~" : GetStringForChit(node->chit);
       PopulateLineString(buffer, rowIndex++, colIndex, " \\" + filling + "/");
       
       PopulateLineString(buffer, rowIndex++, colIndex, "  \\_____/ ");

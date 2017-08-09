@@ -269,6 +269,8 @@ namespace Catan {
 				
 				if (node->CanPlaceChit()) {
 					node->chit = chitList[chitPos++];
+				} else {
+					node->chit = -1;
 				}
 			}
 		}
