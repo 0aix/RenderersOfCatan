@@ -8,6 +8,7 @@
 #include "include/nopondsrule.h"
 #include "include/nochitstouchingrule.h"
 #include "include/islandcountrule.h"
+#include "include/nosupergoldrule.h"
 #include "include/abstractrule.h"
 #include "include/boardnode.h"
 
@@ -139,7 +140,9 @@ namespace Catan {
 				return new NoSpecialChitsTouchingRule(boolMap);
 			} else if (name == "IslandCount") {
 				return new IslandCountRule(intMap, boolMap);
-			} else {
+			} else if (name == "NoSuperGold") {
+        return new NoSuperGoldRule(boolMap);
+      } else {
 				cerr << "[Config File ERROR] Unknown rule '" << name << "'" << endl;
 				throw ConfigParseException();
 			}
