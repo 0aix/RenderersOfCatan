@@ -1,6 +1,8 @@
 #pragma once
 #define NEIGHBOUR_COUNT 6
 #include <vector>
+#include <string>
+#include <utility>
 
 namespace Catan {
 	namespace Generate {
@@ -22,7 +24,10 @@ namespace Catan {
 			GOLD,
 			NONE
 		};
-		
+
+		class Port;
+		class ShoreEdge;
+
 		// Vertices in the Board Graph, representing Hex tiles
 		//       N
 		//     _____
@@ -31,17 +36,18 @@ namespace Catan {
 		//   \       /
 		// SW \_____/ SE
 		//       S
-		class BoardNode {
-		public:
+		struct BoardNode {
 			// Useful for graph traversal
 			bool marked;
 			std::vector<BoardNode*> neighbours;
+			std::vector<Port*> ports;
 			TileType type;
 			int chit;
 
 			BoardNode() {
         for (int i = 0; i < NEIGHBOUR_COUNT; i++) {
           neighbours.push_back(NULL);
+          ports.push_back(NULL);
         }
 
         marked = false;
@@ -52,6 +58,32 @@ namespace Catan {
 			int NumNeighbours();
 			std::vector<BoardNode*> NonNullNeighbours();
 			bool CanPlaceChit();
+			void ClearPorts();
+			ShoreEdge *GenerateShoreLine();
+			void AddPort(int index, Port *port);
+			std::vector<std::pair<Port*, int>> NonNullPorts(); 
+
+		private:
+			bool IsWater(BoardNode *node);
+		};
+
+		struct Port {
+			BoardNode *attachedNode;
+			int trade;
+			std::string name;
+
+			Port(BoardNode *node, int trade, std::string name) : attachedNode(node), trade(trade), name(name) {}
+		};
+
+		struct ShoreEdge {
+			BoardNode *attachedNode;
+			ShoreEdge *next;
+			ShoreEdge *prev;
+			int index;
+			bool originalLeft;
+			bool originalRight;
+
+			ShoreEdge(BoardNode *attachedNode, int index) : attachedNode(attachedNode), index(index), originalLeft(true), originalRight(true) {} 
 		};
 	}
 }
