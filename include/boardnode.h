@@ -38,22 +38,11 @@ namespace Catan {
 		//       S
 		struct BoardNode {
 			// Useful for graph traversal
-			bool marked;
-			std::vector<BoardNode*> neighbours;
-			std::vector<Port*> ports;
-			TileType type;
-			int chit;
-
-			BoardNode() {
-        for (int i = 0; i < NEIGHBOUR_COUNT; i++) {
-          neighbours.push_back(NULL);
-          ports.push_back(NULL);
-        }
-
-        marked = false;
-        type = NONE;
-        chit = -1;
-      }
+			bool marked = false;
+			std::vector<BoardNode*> neighbours = std::vector<BoardNode*>(NEIGHBOUR_COUNT, NULL);
+			std::vector<Port*> ports = std::vector<Port*>(NEIGHBOUR_COUNT, NULL);
+			TileType type = NONE;
+			int chit = -1;
       
 			int NumNeighbours();
 			std::vector<BoardNode*> NonNullNeighbours();

@@ -2,6 +2,7 @@
 #define DRAW_H
 
 #include <GL/glew.h>
+#include "include/boardgraph.h"
 
 namespace Catan
 {
@@ -11,11 +12,11 @@ namespace Catan
         void Uninitialize();
         void LoadAll();
 
-        void Render();
+        void Render(Generate::BoardGraph& graph, float length, float radius, float margin, int samples);
         void DrawTile(float cx, float cy, float length, float margin, int type);
         void DrawChit(float cx, float cy, float radius, float margin, int num);
 
-        void SaveToFile(GLuint textureID);
+        void SaveToFile(GLuint textureID, int width, int height);
         void Preview(GLuint textureID);
     }
 }

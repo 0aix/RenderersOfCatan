@@ -18,6 +18,7 @@ const int CONFIG_PARSE_ERROR_CODE = 2;
 // Command line arguments
 // -c [Config file path]
 // -r [text|image]
+
 int main(int argv, char **argc)
 {
   srand(time(NULL));
@@ -54,11 +55,11 @@ int main(int argv, char **argc)
 
 	Catan::Generate::BoardGraph graph = Catan::Generate::BoardGraph(&config);
 	graph.RandomizeWithRules();
-
+Catan::Draw::RenderAsText(graph);
 	if (renderType == "text") {
 		Catan::Draw::RenderAsText(graph);
 	} else if (renderType == "image" && Catan::Draw::Initialize()) {
-        Catan::Draw::Render();
+        Catan::Draw::Render(graph, 400.0f, 100.0f, 5.0f, 4);
         Catan::Draw::Uninitialize();
 	}
 

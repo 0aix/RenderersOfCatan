@@ -24,7 +24,7 @@ namespace Catan {
 		private:
 			std::vector<BoardNode*> firstNodes;
 			Config *config;
-      int boardHeight;
+			int boardHeight;
 
 			BoardNode *GenerateRow(int size);
 			void ColumnLink(int leftSize, BoardNode *firstLeft, int rightSize, BoardNode *firstRight);

@@ -3,10 +3,11 @@
 #include <stdlib.h>
 #include <fstream>
 #include <math.h>
-
+#include <iostream>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "shader.h"
+#include "include/boardgraph.h"
 
 #define CATAN_GLFW_INIT_FAILED 0
 #define CATAN_GLFW_CREATE_WINDOW_FAILED 1
@@ -137,8 +138,6 @@ namespace Catan
             glfwTerminate();
         }
 
-        GLuint port;
-
         void LoadAll()
         {
             // Load tile textures
@@ -173,49 +172,31 @@ namespace Catan
             }
             delete buffer;
 
-            ///BELLEELHE
-            buffer = new char[5120 * 6600 * 3];
-            glGenTextures(1, &port);
-            std::fstream fs("./ports.bmp", std::fstream::in);
-            fs.seekg(18);
-            fs.read(buffer, 5120 * 6600 * 3);
-            fs.close();
-
-            glBindTexture(GL_TEXTURE_2D, port);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 5120, 6600, 0, GL_BGR, GL_UNSIGNED_BYTE, buffer);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-            delete buffer;
-
             // Load vertex array
             glGenVertexArrays(1, &vertexarray);
             glBindVertexArray(vertexarray);
 
             // Load vertices
-            GLfloat vertices[] = {
-                -1.0f, 1.0f,
-                -0.687692824f, -0.2582173f,
-                -0.476571798f, -0.444364922f,
-                -0.194935694f, -0.567401952f,
-                0.194935694f, -0.567401952f,
-                0.476571798f, -0.444364922f,
-                0.687692824f, -0.2582173f,
-                1.0f, 1.0f
-            };
-            GLfloat uv_vertices[] = {
-                3472.0f / 5120.0f, 4223.0f / 6600.0f,
-                2811.0f / 5120.0f, 4045.0f / 6600.0f,
-                2712.0f / 5120.0f, 3936.0f / 6600.0f,
-                2650.0f / 5120.0f, 3794.0f / 6600.0f,
-                2649.0f / 5120.0f, 3581.0f / 6600.0f,
-                2710.0f / 5120.0f, 3444.0f / 6600.0f,
-                2811.0f / 5120.0f, 3330.0f / 6600.0f,
-                3468.0f / 5120.0f, 3170.0f / 6600.0f
-            };
-            for (int i = 0; i < 8; i++)
-                uv_vertices[i * 2] += 8.0f / 5120.0f;
+            // GLfloat vertices[] = {
+            //     -1.0f, 1.0f,
+            //     -0.687692824f, -0.2582173f,
+            //     -0.476571798f, -0.444364922f,
+            //     -0.194935694f, -0.567401952f,
+            //     0.194935694f, -0.567401952f,
+            //     0.476571798f, -0.444364922f,
+            //     0.687692824f, -0.2582173f,
+            //     1.0f, 1.0f
+            // };
+
+            // Load circle vertices
+            GLfloat* circle_vertices = new GLfloat[1024 * 2];
+            float radian = 0.0f;
+            for (int i = 0; i < 1024; i++)
+            {
+                circle_vertices[i * 2] = cos(radian);
+                circle_vertices[i * 2 + 1] = sin(radian);
+                radian += 2.0f * 3.141593f / 1024;
+            }
 
             // Load vertex buffers
             glGenBuffers(3, vertexbuffer);
@@ -224,7 +205,16 @@ namespace Catan
             glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[1]);
             glBufferData(GL_ARRAY_BUFFER, sizeof(preview_vertices), preview_vertices, GL_STATIC_DRAW);
             glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[2]);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 1024 * 2, circle_vertices, GL_STATIC_DRAW);
+
+            // Load circle uv vertices
+            radian = 0.0f;
+            for (int i = 0; i < 1024; i++)
+            {
+                circle_vertices[i * 2] = 0.5f * cos(radian) + 0.5f;
+                circle_vertices[i * 2 + 1] = 0.5f * -sin(radian) + 0.5f;
+                radian += 2.0f * 3.141593f / 1024;
+            }
 
             // Load uv buffers
             glGenBuffers(3, uvbuffer);
@@ -233,22 +223,26 @@ namespace Catan
             glBindBuffer(GL_ARRAY_BUFFER, uvbuffer[1]);
             glBufferData(GL_ARRAY_BUFFER, sizeof(preview_uv), preview_uv, GL_STATIC_DRAW);
             glBindBuffer(GL_ARRAY_BUFFER, uvbuffer[2]);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(uv_vertices), uv_vertices, GL_STATIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 1024 * 2, circle_vertices, GL_STATIC_DRAW);
+
+            delete circle_vertices;
 
             // Load shaders
             diffuseShader = LoadShaders("./shaders/diffuse.vs", "./shaders/diffuse.fs");
             textureShader = LoadShaders("./shaders/texture.vs", "./shaders/texture.fs");
             texture = glGetUniformLocation(textureShader, "sampler");
 
-            //glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-            glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+            glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         }
 
-        void Render()
+        void Render(Generate::BoardGraph& graph, float length, float radius, float margin, int samples)
         {
             // Compute width and height
-
-
+            int bwidth = graph.BoardWidth();
+            int bheight = graph.BoardHeight();
+            int width = ceil(bwidth * (1.5f * length + margin / 0.8660254f) + 3.5f * length + 3.0f * margin / 0.8660254f);
+            int height = ceil(bheight * (1.7320508f * length + margin) + 2.0f * 1.7320508f * length + 3.0f * margin);
+            
             // Set up regular and multisample FBOs, render targets, and depth buffers
             GLuint framebuffer[2];
             GLuint rendertarget[2];
@@ -260,62 +254,56 @@ namespace Catan
             // Regular
             glBindFramebuffer(GL_FRAMEBUFFER, framebuffer[0]);
             glBindTexture(GL_TEXTURE_2D, rendertarget[0]);
-            //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2048, 2048, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1024, 1024, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
             glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, rendertarget[0], 0);
             glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer[0]);
-            //glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 2048, 2048);
-            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1024, 1024);
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer[0]);
 
             // Multisample
             glBindFramebuffer(GL_FRAMEBUFFER, framebuffer[1]);
             glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, rendertarget[1]);
-            // glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 8, GL_RGB, 2048, 2048, GL_TRUE);
-            glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 8, GL_RGB, 1024, 1024, GL_TRUE);
+            glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_RGB, width, height, GL_TRUE);
             glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, rendertarget[1], 0);
             glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer[1]);
-            // glRenderbufferStorageMultisample(GL_RENDERBUFFER, 8, GL_DEPTH_COMPONENT, 2048, 2048);
-            glRenderbufferStorageMultisample(GL_RENDERBUFFER, 8, GL_DEPTH_COMPONENT, 1024, 1024);
+            glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples, GL_DEPTH_COMPONENT, width, height);
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer[1]);
 
             // Render
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            //BLELHEH
-            glUseProgram(textureShader);
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, port);
-            glUniform1i(texture, 0);
+            auto& it = graph.ForwardIterator();
 
-            glEnableVertexAttribArray(0);
-            glEnableVertexAttribArray(1);
-            glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[2]);
-            glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
-            glBindBuffer(GL_ARRAY_BUFFER, uvbuffer[2]);
-            glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
-            glDrawArrays(GL_TRIANGLE_FAN, 0, 8);
-            glDisableVertexAttribArray(0);
-            glDisableVertexAttribArray(1);
-
-            //DrawTile(1024.0f, 1024.0f, 400.0f, 5.0f, 0);
-            //DrawChit(1024.0f, 1024.0f, 100.0f, 5.0f, 8);
+            float x = 2.5f * length + 2.0f * margin / 0.8660254f;
+            for (int i = 0; i < bwidth; i++)
+            {
+                int rows = graph.ColumnHeight(i);
+                float y = 1.5f * 1.7320508f * length + 2.0f * margin + (bheight - rows) * (0.8660254f * length + 0.5f * margin);
+                for (int j = 0; j < rows; j++)
+                {
+                    Generate::BoardNode* node = it.Next();
+                    DrawTile(x, y, length, margin, node->type);
+                    DrawChit(x, y, radius, margin, node->chit);
+                    y += 1.7320508f * length + margin;
+                }
+                x += 1.5f * length + margin / 0.8660254f;
+            }
 
             // Multisample blit + flip
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer[1]);
             glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebuffer[0]);
-            //glBlitFramebuffer(0, 0, 2048, 2048, 0, 2048, 2048, 0, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-            glBlitFramebuffer(0, 0, 1024, 1024, 0, 1024, 1024, 0, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-            
+            glBlitFramebuffer(0, 0, width, height, 0, height, width, 0, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
             // Save texture
-            SaveToFile(rendertarget[0]);
+            SaveToFile(rendertarget[0], width, height);
 
             // Preview texture
             Preview(rendertarget[0]);
@@ -361,6 +349,9 @@ namespace Catan
 
         void DrawChit(float cx, float cy, float radius, float margin, int num)
         {
+            if (num < 0)
+                return;
+            
             // Draw chit outline
             float rradius = radius + margin;
             glViewportIndexedf(0, cx - rradius, cy - rradius, 2.0f * rradius, 2.0f * rradius);
@@ -391,29 +382,23 @@ namespace Catan
             glDisableVertexAttribArray(1);
         }
 
-        void SaveToFile(GLuint textureID)
+        void SaveToFile(GLuint textureID, int width, int height)
         {
-            // char* buffer = new char[2048 * 2048 * 3];
-            char* buffer = new char[1024 * 1024 * 3];
+            char* buffer = new char[width * height * 3];
             glBindTexture(GL_TEXTURE_2D, textureID);
             glGetTexImage(GL_TEXTURE_2D, 0, GL_BGR, GL_UNSIGNED_BYTE, buffer);
 
             char header[18] = { };
             header[2] = 2;
-            // header[12] = 2048 & 0xFF;
-            // header[13] = (2048 >> 8) & 0xFF;
-            // header[14] = 2048 & 0xFF;
-            // header[15] = (2048 >> 8) & 0xFF;
-            header[12] = 1024 & 0xFF;
-            header[13] = (1024 >> 8) & 0xFF;
-            header[14] = 1024 & 0xFF;
-            header[15] = (1024 >> 8) & 0xFF;
+            header[12] = width & 0xFF;
+            header[13] = (width >> 8) & 0xFF;
+            header[14] = height & 0xFF;
+            header[15] = (height >> 8) & 0xFF;
             header[16] = 24;
 
             std::fstream fs("./output/output.tga", std::fstream::out | std::fstream::trunc);
             fs.write(header, sizeof(header));
-            // fs.write(buffer, 2048 * 2048 * 3);
-            fs.write(buffer, 1024 * 1024 * 3);
+            fs.write(buffer, width * height * 3);
             fs.close();
             delete buffer;
         }
@@ -422,6 +407,8 @@ namespace Catan
         {
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
             glViewport(0, 0, 1024, 1024);
+
+            // aspect ratio maybe.
 
             do
             {
