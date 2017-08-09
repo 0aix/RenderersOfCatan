@@ -44,6 +44,7 @@ namespace Catan {
 			Config();
 			int TileCount();
 			int TileCountFromType(TileType t);
+			bool initialized = false;
 
 		private:
 			int FindMaxColSize();
