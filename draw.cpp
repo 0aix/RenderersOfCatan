@@ -72,7 +72,16 @@ namespace Catan
         GLfloat chit_vertices[1024 * 2];
         GLfloat chit_uv[1024 * 2];
         GLfloat port_vertices[48 * 2];
-        GLfloat port_uv[1];
+        const GLfloat port_uv[] = {
+            0.0f, 1.0f,
+            0.156153588f, 0.37089135f,
+            0.261714101f, 0.277817539f,
+            0.402532153f, 0.216299024f,
+            0.597467847f, 0.216299024f,
+            0.738285899f, 0.277817539f,
+            0.843846412f, 0.37089135f,
+            1.0f, 1.0f
+        };
         const int chitnum[] = { 0, 0, 0, 1, 2, 3, 4, 0, 5, 6, 7, 8, 9 };
         GLFWwindow* window;
         GLuint tiles[8];
@@ -214,12 +223,29 @@ namespace Catan
                 radian += 2.0f * 3.141593f / 1024;
             }
 
+            // Load port vertices
+            port_vertices[0] = -0.25f; port_vertices[1] = 0.4330127f;
+            port_vertices[2] = -0.171923206f; port_vertices[3] = 0.747567025f;
+            port_vertices[4] = -0.1191429495f; port_vertices[5] = 0.7941039305f;
+            port_vertices[6] = -0.0487339235f; port_vertices[7] = 0.824863188f;
+            port_vertices[8] = 0.0487339235f; port_vertices[9] = 0.824863188f;
+            port_vertices[10] = 0.1191429495f; port_vertices[11] = 0.7941039305f;
+            port_vertices[12] = 0.171923206f; port_vertices[13] = 0.747567025f;
+            port_vertices[14] = 0.25f; port_vertices[15] = 0.4330127f;
+            for (int i = 8; i < 48; i++)
+            {
+                port_vertices[i * 2] = 0.5f * port_vertices[i * 2 - 8] - 0.8660254f * port_vertices[i * 2 - 7];
+                port_vertices[i * 2 + 1] = 0.8660254f * port_vertices[i * 2 - 8] + 0.5f * port_vertices[i * 2 - 7];
+            }
+
             // Load vertex buffers
             glGenBuffers(3, vertexbuffer);
             glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[0]);
             glBufferData(GL_ARRAY_BUFFER, sizeof(tile_vertices), tile_vertices, GL_STATIC_DRAW);
             glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[1]);
             glBufferData(GL_ARRAY_BUFFER, sizeof(chit_vertices), chit_vertices, GL_STATIC_DRAW);
+            glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[2]);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(port_vertices), port_vertices, GL_STATIC_DRAW);
 
             // Load chit uv vertices
             radian = 0.0f;
@@ -236,6 +262,8 @@ namespace Catan
             glBufferData(GL_ARRAY_BUFFER, sizeof(tile_uv), tile_uv, GL_STATIC_DRAW);
             glBindBuffer(GL_ARRAY_BUFFER, uvbuffer[1]);
             glBufferData(GL_ARRAY_BUFFER, sizeof(chit_uv), chit_uv, GL_STATIC_DRAW);
+            glBindBuffer(GL_ARRAY_BUFFER, uvbuffer[2]);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(port_uv), port_uv, GL_STATIC_DRAW);
 
             // Load shaders
             diffuseShader = LoadShaders("./shaders/diffuse.vs", "./shaders/diffuse.fs");
@@ -393,9 +421,37 @@ namespace Catan
             glDisableVertexAttribArray(1);
         }
 
-        void DrawPort(float cx, float cy, float length, float margin, int dir)
+        void DrawPort(float cx, float cy, float length, float margin, int type, int dir)
         {
+            // Draw tile outline
+            float width = 2.0f * (length + margin / 0.8660254f);
+
+            glViewportIndexedf(0, cx - width, cy - width, 2.0f * width, 2.0f * width);
+
+            glUseProgram(diffuseShader);
+            glEnableVertexAttribArray(0);
+            glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[2]);
+            glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+            glDrawArrays(GL_TRIANGLE_FAN, 0, 8);
+            glDisableVertexAttribArray(0);
             
+            // Draw tile
+            glViewportIndexedf(0, cx - 2.0f * length, cy - 2.0f * length, 4.0f * length, 4.0f * length);
+
+            glUseProgram(textureShader);
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, ports[type]);
+            glUniform1i(texture, 0);
+
+            glEnableVertexAttribArray(0);
+            glEnableVertexAttribArray(1);
+            glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[2]);
+            glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(16 * sizeof(GLfloat) * dir));
+            glBindBuffer(GL_ARRAY_BUFFER, uvbuffer[2]);
+            glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+            glDrawArrays(GL_TRIANGLE_FAN, 0, 8);
+            glDisableVertexAttribArray(0);
+            glDisableVertexAttribArray(1);
         }
 
         void SaveToFile(GLuint textureID, int width, int height)
