@@ -45,7 +45,7 @@ Different kinds of boards can be generated with config files. The format for the
 Configuration files are specified with the `-c` command.
 
 ```
-./catangen -c <Path to config file>
+./catangen -c <path to config file>
 ```
 
 ## Rules
@@ -76,3 +76,15 @@ Ports are specified by port objects as described below.
 * "ore"
 * "wood"
 * "?"
+
+## Building
+```
+make
+```
+
+## Running
+```
+./catangen -c <path to config file>
+```
+
+The program will render in text and save as an image in the output directory. It will also open the image as soon as it's saved for previewing.
