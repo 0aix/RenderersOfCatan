@@ -88,3 +88,12 @@ make
 ```
 
 The program will render in text and save as an image in the output directory. It will also open the image as soon as it's saved for previewing.
+
+## Available Arguments
+|Argument|Description|Required|Default|
+|--------|-----------|--------|-------|
+|`-c <path to config file>`|Specifies the path to the config file described above.|Yes|`n/a`|
+|`-l <float value>`|Specifies the length of the hex tile sides in pixels|No|`400.0f`|
+|`-r <float value>`|Specifies the radius of the chits in pixels|No|`100.0f`|
+|`-m <float value>`|Specifies the length of the hex margins in pixels|No|`5.0f`|
+|`-h`|Prints the available commands|No|`n/a`|
