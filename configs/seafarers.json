@@ -25,9 +25,28 @@
 	],
 	"ports" : [
 		{
-			"trade" : 3, 
-			"count" : 5,
+			"count" : 4,
 			"resource" : "?"
+		},
+		{
+			"count" : 1,
+			"resource" : "brick"
+		},
+		{
+			"count" : 1,
+			"resource" : "wheat"
+		},
+		{
+			"count" : 1,
+			"resource" : "sheep"
+		},
+		{
+			"count" : 1,
+			"resource" : "ore"
+		},
+		{
+			"count" : 1,
+			"resource" : "wood"
 		}
 	]
 }
