@@ -1,3 +1,4 @@
 main
 output/*
 .vscode
+main.dSYM/Contents/Info.plist

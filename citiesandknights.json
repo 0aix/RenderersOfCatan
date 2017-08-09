@@ -1,0 +1,50 @@
+{
+	"board" : [3, 4, 5, 6, 5, 4, 3],
+	"chits" : [0, 1, 3, 3, 3, 3, 0, 3, 3, 3, 3, 3],
+	"water_count" : 0,
+	"desert_count" : 2,
+	"gold_count" : 0,
+	"forest_count" : 6,
+	"mine_count" : 5,
+	"mountain_count" : 5,
+	"wheat_count" : 6,
+	"fields_count" : 6,
+	"rules" : [
+		{
+			"name" : "NoSpecialChitsTouching",
+			"follow_strictly" : true
+		}
+	],
+	"ports" : [
+		{
+			"trade" : 3,
+			"count" : 3,
+			"resource" : "?"
+		},
+		{
+			"trade" : 2,
+			"count" : 1,
+			"resource" : "brick"
+		},
+		{
+			"trade" : 2,
+			"count" : 1,
+			"resource" : "wheat"
+		},
+		{
+			"trade" : 2,
+			"count" : 1,
+			"resource" : "sheep"
+		},
+		{
+			"trade" : 2,
+			"count" : 1,
+			"resource" : "ore"
+		},
+		{
+			"trade" : 2,
+			"count" : 1,
+			"resource" : "wood"
+		}
+	]
+}
