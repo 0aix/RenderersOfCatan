@@ -12,7 +12,7 @@ namespace Catan
         void Uninitialize();
         void LoadAll();
 
-        void Render(Generate::BoardGraph& graph, float length, float radius, float margin, int samples);
+        void Render(Generate::BoardGraph& graph, float length, float radius, float margin);
         void DrawTile(float cx, float cy, float length, float margin, int type);
         void DrawChit(float cx, float cy, float radius, float margin, int num);
         void DrawPort(float cx, float cy, float length, float margin, int type, int dir);
