@@ -97,3 +97,12 @@ The program will render in text and save as an image in the output directory. It
 |`-r <float value>`|Specifies the radius of the chits in pixels|No|`100.0f`|
 |`-m <float value>`|Specifies the length of the hex margins in pixels|No|`5.0f`|
 |`-h`|Prints the available commands|No|`n/a`|
+
+## Generated Board Examples
+Here is an example of a board generated with the [seafarers config](configs/seafarers.json)
+
+![](seafarers_board.jpg)
+
+Here is an example of a board generated with the [cities and knights config](configs/citiesandknights.json)
+
+![](candk_board.jpg)
