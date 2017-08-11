@@ -20,6 +20,9 @@ namespace Catan {
 		private:
 			int min = 1;
       int max = 2147483647;
+      int minSize = 1;
+
+      int IslandSize(BoardNode *node);
 		public:
 			IslandCountRule(std::map<std::string, int> &intMap, std::map<std::string, bool> &boolMap);
 

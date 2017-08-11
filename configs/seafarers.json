@@ -21,7 +21,8 @@
 		{
 			"name" : "IslandCount",
 			"follow_strictly" : true,
-			"min" : 3
+			"min" : 3,
+			"minSize" : 7
 		}
 	],
 	"ports" : [
