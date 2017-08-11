@@ -18,7 +18,8 @@ namespace Catan {
 	namespace Generate {
 		class IslandCountRule : public AbstractRule {
 		private:
-			int min, max;
+			int min = 1;
+      int max = 2147483647;
 		public:
 			IslandCountRule(std::map<std::string, int> &intMap, std::map<std::string, bool> &boolMap);
 

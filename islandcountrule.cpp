@@ -2,6 +2,7 @@
 #include "include/boardgraph.h"
 #include <map>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -22,8 +23,12 @@ namespace Catan {
 		}
 
 		bool IslandCountRule::IsFollowed(BoardGraph &graph) {
-			// TODO
-			return true;
+			auto NotWater = [](BoardNode *node) {
+				return node->type != WATER; 
+			};
+
+			vector<BoardNode*> islandHeads = graph.GetIslands(NotWater);			
+			return islandHeads.size() >= min && islandHeads.size() <= max;
 		}
 	}
 }
