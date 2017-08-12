@@ -11,6 +11,7 @@ namespace Catan
         bool Initialize();
         void Uninitialize();
         void LoadAll();
+        void LoadPortVertices(float length, float margin);
 
         void Render(Generate::BoardGraph& graph, float length, float radius, float margin);
         void DrawTile(float cx, float cy, float length, float margin, int type);

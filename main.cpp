@@ -80,6 +80,7 @@ int main(int argc, char **argv)
 	{
 		Catan::Draw::Render(graph, length, radius, margin);
 		Catan::Draw::Uninitialize();
+    system("open ./output/board.png");
 	}
 
   return 0;

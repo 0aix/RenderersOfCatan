@@ -16,7 +16,7 @@ COMPILER_FLAGS = -w -std=c++14 -DRAPIDJSON_HAS_CXX11_RANGE_FOR=1
 
 # LINKER_FLAGS specifies the libraries we're linking against
 # Cocoa, IOKit, and CoreVideo are needed for static GLFW3.
-LINKER_FLAGS = -framework OpenGL -lglfw -lglew
+LINKER_FLAGS = -framework OpenGL -lglfw -lglew -lpng
 
 # OBJ_NAME specifies the name of our exectuable
 OBJ_NAME = catangen

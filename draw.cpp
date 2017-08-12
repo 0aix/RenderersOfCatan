@@ -8,7 +8,7 @@
 #include <GLFW/glfw3.h>
 #include "shader.h"
 #include "include/boardgraph.h"
-#include <thread>
+#include "png.h"
 
 #define CATAN_GLFW_INIT_FAILED 0
 #define CATAN_GLFW_CREATE_WINDOW_FAILED 1
@@ -60,6 +60,15 @@ namespace Catan
             -0.5f, -0.8660254f,
             -1.0f, 0.0f
         };
+        // const GLfloat tile_uv[] = 
+        // {
+        //     0.25f, 0.0669873f,
+        //     0.75f, 0.0669873f,
+        //     1.0f, 0.5f,
+        //     0.75f, 0.9330127f,
+        //     0.25f, 0.9330127f,
+        //     0.0f, 0.5f
+        // };
         const GLfloat tile_uv[] = 
         {
             0.25f, 0.0669873f,
@@ -67,11 +76,16 @@ namespace Catan
             1.0f, 0.5f,
             0.75f, 0.9330127f,
             0.25f, 0.9330127f,
-            0.0f, 0.5f
+            0.0f, 0.5f,
+            0.25f, 0.0669873f,
+            0.75f, 0.0669873f,
+            1.0f, 0.5f,
+            0.75f, 0.9330127f,
+            0.25f, 0.9330127f
         };
         GLfloat chit_vertices[1024 * 2];
-        GLfloat chit_uv[1024 * 2];
-        GLfloat port_vertices[48 * 2];
+        // GLfloat chit_uv[1024 * 2];
+        GLfloat chit_uv[(1024 + 1023) * 2];
         const GLfloat port_uv[] = {
             0.0f, 1-1.0f,
             0.156153588f, 1-0.37089135f,
@@ -88,7 +102,7 @@ namespace Catan
         GLuint chits[10];
         GLuint ports[6];
         GLuint vertexarray;
-        GLuint vertexbuffer[3];
+        GLuint vertexbuffer[4];
         GLuint uvbuffer[3];
         GLuint diffuseShader;
         GLuint textureShader;
@@ -136,7 +150,7 @@ namespace Catan
 
         void Uninitialize()
         {
-            glDeleteBuffers(3, vertexbuffer);
+            glDeleteBuffers(4, vertexbuffer);
             glDeleteBuffers(3, uvbuffer);
             glDeleteTextures(8, tiles);
             glDeleteTextures(10, chits);
@@ -202,18 +216,6 @@ namespace Catan
             glGenVertexArrays(1, &vertexarray);
             glBindVertexArray(vertexarray);
 
-            // Load vertices
-            // GLfloat vertices[] = {
-            //     -1.0f, 1.0f,
-            //     -0.687692824f, -0.2582173f,
-            //     -0.476571798f, -0.444364922f,
-            //     -0.194935694f, -0.567401952f,
-            //     0.194935694f, -0.567401952f,
-            //     0.476571798f, -0.444364922f,
-            //     0.687692824f, -0.2582173f,
-            //     1.0f, 1.0f
-            // };
-
             // Load chit vertices
             float radian = 0.0f;
             for (int i = 0; i < 1024; i++)
@@ -223,38 +225,22 @@ namespace Catan
                 radian += 2.0f * 3.141593f / 1024;
             }
 
-            // Load port vertices
-            port_vertices[0] = -0.25f; port_vertices[1] = -0.4330127f;
-            port_vertices[2] = -0.171923206f; port_vertices[3] = -0.747567025f;
-            port_vertices[4] = -0.1191429495f; port_vertices[5] = -0.7941039305f;
-            port_vertices[6] = -0.0487339235f; port_vertices[7] = -0.824863188f;
-            port_vertices[8] = 0.0487339235f; port_vertices[9] = -0.824863188f;
-            port_vertices[10] = 0.1191429495f; port_vertices[11] = -0.7941039305f;
-            port_vertices[12] = 0.171923206f; port_vertices[13] = -0.747567025f;
-            port_vertices[14] = 0.25f; port_vertices[15] = -0.4330127f;
-            for (int i = 8; i < 48; i++)
-            {
-                port_vertices[i * 2] = 0.5f * port_vertices[i * 2 - 16] - 0.8660254f * port_vertices[i * 2 - 15];
-                port_vertices[i * 2 + 1] = 0.8660254f * port_vertices[i * 2 - 16] + 0.5f * port_vertices[i * 2 - 15];
-            }
-
-            // Load vertex buffers
-            glGenBuffers(3, vertexbuffer);
-            glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[0]);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(tile_vertices), tile_vertices, GL_STATIC_DRAW);
-            glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[1]);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(chit_vertices), chit_vertices, GL_STATIC_DRAW);
-            glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[2]);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(port_vertices), port_vertices, GL_STATIC_DRAW);
-
             // Load chit uv vertices
             radian = 0.0f;
-            for (int i = 0; i < 1024; i++)
+            // for (int i = 0; i < 1024; i++)
+            for (int i = 0; i < 1024 + 1023; i++)
             {
                 chit_uv[i * 2] = 0.5f * cos(radian) + 0.5f;
                 chit_uv[i * 2 + 1] = 0.5f * -sin(radian) + 0.5f;
                 radian += 2.0f * 3.141593f / 1024;
             }
+
+            // Load vertex buffers
+            glGenBuffers(4, vertexbuffer);
+            glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[0]);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(tile_vertices), tile_vertices, GL_STATIC_DRAW);
+            glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[1]);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(chit_vertices), chit_vertices, GL_STATIC_DRAW);
 
             // Load uv buffers
             glGenBuffers(3, uvbuffer);
@@ -273,12 +259,62 @@ namespace Catan
             glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         }
 
+        void LoadPortVertices(float length, float margin)
+        {
+            const GLfloat vertices[] = {
+                -0.25f, 0.0f,
+                -0.171923206f, -0.314554325f,
+                -0.1191429495f, -0.3610912305f,
+                -0.0487339235f, -0.391850488f,
+                0.0487339235f, -0.391850488f,
+                0.1191429495f, -0.3610912305f,
+                0.171923206f, -0.314554325f,
+                0.25f, 0.0f
+            };
+
+            float ratio = (length - margin / 0.8660254f) / (length + margin / 0.8660254f);
+
+            // Load port vertices
+            GLfloat port_vertices[8 * 2 * 6];
+            for (int i = 0; i < 8; i++) {
+                port_vertices[i * 2] = ratio * vertices[i * 2];
+                port_vertices[i * 2 + 1] = ratio * vertices[i * 2 + 1] - 0.4330127f;
+            }
+            for (int i = 8; i < 48; i++)
+            {
+                port_vertices[i * 2] = 0.5f * port_vertices[i * 2 - 16] - 0.8660254f * port_vertices[i * 2 - 15];
+                port_vertices[i * 2 + 1] = 0.8660254f * port_vertices[i * 2 - 16] + 0.5f * port_vertices[i * 2 - 15];
+            }
+
+            glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[2]);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(port_vertices), port_vertices, GL_STATIC_DRAW);
+
+            // Load port outline vertices
+            float m = 0.5f * margin / (length + margin / 0.8660254f);
+            port_vertices[0] -= 1.27855872f * m; port_vertices[1] += m;
+            port_vertices[2] -= 0.854744635f / 0.954612386f * m; port_vertices[3] -= 0.519048754 / 0.954612386f * m;
+            port_vertices[4] -= 0.537312914 / 0.987954307 * m; port_vertices[5] -= 0.843382969 / 0.987954307 * m;
+            port_vertices[6] -= 0.204486186 / 0.97886945 * m; port_vertices[7] -= m;
+            port_vertices[8] += 0.204486186 / 0.97886945 * m; port_vertices[9] -= m;
+            port_vertices[10] += 0.537312914 / 0.987954307 * m; port_vertices[11] -= 0.843382969 / 0.987954307 * m;
+            port_vertices[12] += 0.854744635f / 0.954612386f * m; port_vertices[13] -= 0.519048754 / 0.954612386f * m;
+            port_vertices[14] += 1.27855872f * m; port_vertices[15] += m;
+            for (int i = 8; i < 48; i++)
+            {
+                port_vertices[i * 2] = 0.5f * port_vertices[i * 2 - 16] - 0.8660254f * port_vertices[i * 2 - 15];
+                port_vertices[i * 2 + 1] = 0.8660254f * port_vertices[i * 2 - 16] + 0.5f * port_vertices[i * 2 - 15];
+            }
+
+            glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[3]);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(port_vertices), port_vertices, GL_STATIC_DRAW);
+        }
+
         void Render(Generate::BoardGraph& graph, float length, float radius, float margin)
         {
             // Compute width and height
             int bwidth = graph.BoardWidth();
             int bheight = graph.BoardHeight();
-            int width = ceil(bwidth * (1.5f * length + margin / 0.8660254f) + 3.5f * length + 3.0f * margin / 0.8660254f);
+            int width = ceil(bwidth * (1.5f * length + 0.8660254f * margin) + 3.5f * length + 2.0f * margin / 0.8660254f + 0.8660254f * margin);
             int height = ceil(bheight * (1.7320508f * length + margin) + 2.0f * 1.7320508f * length + 3.0f * margin);
 
             if (width > 16384 || height > 16384)
@@ -318,29 +354,16 @@ namespace Catan
             glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGB, width, height, GL_TRUE);
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, rendertarget[1], 0);
             
+            bool multisample = true;
+
             if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
             {
                 printf("Failed to set up multisampling (image size is probably too large).\nRendered image may not be smooth.\n");
-                glDeleteTextures(1, rendertarget + 1);
-                glDeleteFramebuffers(1, framebuffer + 1);
-                glGenFramebuffers(1, framebuffer + 1);
-                glGenTextures(1, rendertarget + 1);
-                glBindFramebuffer(GL_FRAMEBUFFER, framebuffer[1]);
-                glBindTexture(GL_TEXTURE_2D, rendertarget[1]);
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-                glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, rendertarget[1], 0);
-                if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-                {
-                    printf("Failed to set up second frame buffer.\n");
-                    glDeleteTextures(2, rendertarget);
-                    glDeleteFramebuffers(2, framebuffer);
-                    return;
-                }
+                multisample = false;
+                glBindFramebuffer(GL_FRAMEBUFFER, framebuffer[0]);
             }
+
+            LoadPortVertices(length, margin);
 
             // Render
             glClear(GL_COLOR_BUFFER_BIT);
@@ -354,7 +377,7 @@ namespace Catan
                 DrawTile(x, y, length, margin, Generate::WATER);
                 y += 1.7320508f * length + margin;
             }
-            x += 1.5f * length + margin / 0.8660254f;
+            x += 1.5f * length + 0.8660254f * margin;
             for (int i = 0; i < bwidth; i++)
             {
                 rows = graph.ColumnHeight(i);
@@ -362,7 +385,7 @@ namespace Catan
                 float y2 = y1 + (rows + 1) * ((1.7320508f * length) + margin);
                 DrawTile(x, y1, length, margin, Generate::WATER);
                 DrawTile(x, y2, length, margin, Generate::WATER);
-                x += 1.5f * length + margin / 0.8660254f;
+                x += 1.5f * length + 0.8660254f * margin;
             }
             rows = graph.ColumnHeight(bwidth - 1) + 1;
             y = 1.5f * 1.7320508f * length + 2.0f * margin + (bheight - rows) * (0.8660254f * length + 0.5f * margin);
@@ -375,7 +398,7 @@ namespace Catan
             // Draw board
             auto& it = graph.ForwardIterator();
 
-            x = 2.5f * length + 2.0f * margin / 0.8660254f;
+            x = 2.5f * length + margin / 0.8660254f + margin / 0.8660254f;
             for (int i = 0; i < bwidth; i++)
             {
                 rows = graph.ColumnHeight(i);
@@ -392,14 +415,19 @@ namespace Catan
 
                     y += 1.7320508f * length + margin;
                 }
-                x += 1.5f * length + margin / 0.8660254f;
+                x += 1.5f * length + 0.8660254f * margin;
             }
 
-            // Blit flip
-            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebuffer[0]);
-            glBlitFramebuffer(0, 0, width, height, 0, height, width, 0, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+            // Blit
+            if (multisample)
+            {
+                glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebuffer[0]);
+                glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+            }
 
             // Save texture
+            printf("Saving to png...\n");
+
             SaveToFile(rendertarget[0], width, height);
 
             // Release resources
@@ -434,7 +462,8 @@ namespace Catan
             glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[0]);
             glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
             glBindBuffer(GL_ARRAY_BUFFER, uvbuffer[0]);
-            glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+            // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+            glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((rand() % 6) * sizeof(GLfloat) * 2));
             glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
             glDisableVertexAttribArray(0);
             glDisableVertexAttribArray(1);
@@ -468,7 +497,8 @@ namespace Catan
                 glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[1]);
                 glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
                 glBindBuffer(GL_ARRAY_BUFFER, uvbuffer[1]);
-                glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+                // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+                glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((rand() % 1024) * sizeof(GLfloat) * 2));
                 glDrawArrays(GL_TRIANGLE_FAN, 0, 1024);
                 glDisableVertexAttribArray(0);
                 glDisableVertexAttribArray(1);
@@ -478,25 +508,17 @@ namespace Catan
         void DrawPort(float cx, float cy, float length, float margin, int type, int dir)
         {
             // Draw port outline
-            
             float width = 2.0f * (length + margin / 0.8660254f);
-
             glViewportIndexedf(0, cx - width, cy - width, 2.0f * width, 2.0f * width);
-            // glViewportIndexedf(0, cx + radius * cos(theta) - width, cy + radius * sin(theta) - width, 2.0f * width, 2.0f * width);
 
             glUseProgram(diffuseShader);
             glEnableVertexAttribArray(0);
-            glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[2]);
+            glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[3]);
             glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(16 * sizeof(GLfloat) * dir));
             glDrawArrays(GL_TRIANGLE_FAN, 0, 8);
             glDisableVertexAttribArray(0);
 
             // Draw port
-            width = 2.0f * (length - 2.0f * margin / 1.7320508f);
-            float radius = 0.8660254f * length + margin - 0.4330127f * width;
-            float theta =  -1.570796f + dir * 1.0471976f;
-            glViewportIndexedf(0, cx + radius * cos(theta) - width, cy + radius * sin(theta) - width, 2.0f * width, 2.0f * width);
-
             glUseProgram(textureShader);
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, ports[type]);
@@ -518,23 +540,27 @@ namespace Catan
             char* buffer = new char[width * height * 3];
             glBindTexture(GL_TEXTURE_2D, textureID);
             glPixelStorei(GL_PACK_ALIGNMENT, 1);
-            glGetTexImage(GL_TEXTURE_2D, 0, GL_BGR, GL_UNSIGNED_BYTE, buffer);
+            glGetTexImage(GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE, buffer);
 
-            char header[18] = { };
-            header[2] = 2;
-            header[12] = width & 0xFF;
-            header[13] = (width >> 8) & 0xFF;
-            header[14] = height & 0xFF;
-            header[15] = (height >> 8) & 0xFF;
-            header[16] = 24;
+            FILE* file = fopen("./output/board.png", "wb");
+            png_struct* png = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+            png_info* info = png_create_info_struct(png);
+            
+            png_init_io(png, file);
+            png_set_IHDR(png, info, width, height, 8, PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
+            png_write_info(png, info);
 
-            std::fstream fs("./output/board.tga", std::fstream::out | std::fstream::trunc);
-            fs.write(header, sizeof(header));
-            fs.write(buffer, width * height * 3);
-            fs.close();
+            png_byte** row_pointers = new png_byte*[height];
+            for (int i = 0; i < height; i++)
+                row_pointers[i] = (png_byte*)buffer + i * width * 3;
+
+            png_write_image(png, row_pointers);
+            png_write_end(png, NULL);
+
+            delete row_pointers;
             delete buffer;
 
-            system("open ./output/board.tga");
+            fclose(file);
         }
     }
 }
