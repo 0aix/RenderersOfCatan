@@ -84,6 +84,16 @@ Ports are specified by port objects as described below.
 make
 ```
 
+It's necessary to have glew, glfw, libpng, and zlib installed, which can be done through Homebrew. 
+
+[glew](http://brewformulas.org/glew)
+
+[glfw](http://brewformulas.org/glfw)
+
+[libpng](http://brewformulas.org/libpng)
+
+[zlib](http://brewformulas.org/zlib)
+
 ## Running
 ```
 ./catangen -c <path to config file>
