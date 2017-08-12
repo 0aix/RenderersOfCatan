@@ -20,6 +20,7 @@ namespace Catan {
 			int BoardWidth();
 			int ColumnHeight(int index);
 			std::vector<BoardNode*> GetIslands(bool (*test)(BoardNode*));
+			void UnMarkAll();
 
 		private:
 			std::vector<BoardNode*> firstNodes;
@@ -28,7 +29,6 @@ namespace Catan {
 
 			BoardNode *GenerateRow(int size);
 			void ColumnLink(int leftSize, BoardNode *firstLeft, int rightSize, BoardNode *firstRight);
-			void UnMarkAll();
 			void MarkAllIslandNodesFromSource(BoardNode *source, bool (*test)(BoardNode*));
 			void ClearPorts();
 			int ShoreLineSize(ShoreEdge *edge);

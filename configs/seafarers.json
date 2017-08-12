@@ -11,16 +11,18 @@
 	"fields_count" : 7,
 	"rules" : [
 		{
-			"name" : "NoPonds",
-			"follow_strictly" : true
-		},
-		{
 			"name" : "NoSpecialChitsTouching",
 			"follow_strictly" : true
 		},
 		{
 			"name" : "NoSuperGold",
 			"follow_strictly" : true
+		},
+		{
+			"name" : "IslandCount",
+			"follow_strictly" : true,
+			"min" : 3,
+			"minSize" : 7
 		}
 	],
 	"ports" : [

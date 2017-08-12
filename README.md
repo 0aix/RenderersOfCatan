@@ -56,7 +56,9 @@ Rules are used to limit the kinds of board scenarios encountered when randomly g
 |NoPonds|Eliminates boards with 1 water tile completely surrounded by land.|`{ "name" : "NoPonds", "follow_strictly": <boolean> }`|
 |NoSpecialChitsTouching|Eliminates boards that have two or more hexes with 8 or 6 next to eachother.|`{ "name" : "NoSpecialChitsTouching", "follow_strictly": <boolean> }`|
 |NoSuperGold|Eliminates boards with 6 or 8 on gold.|`{ "name" : "NoSuperGold", "follow_strictly": <boolean> }`|
-|IslandCount|Specifies the minimum or maximum (or both) of islands in the board. `min` and `max` are both optional.|`{ "name" : "NoPonds", "follow_strictly": <boolean>, "min" : <int>, "max" : <int> }`|
+|IslandCount|Specifies the minimum or maximum (or both) of islands in the board, as well as the minimum size of each island. `min`, `max`, `minSize` are all optional.|`{ "name" : "NoPonds", "follow_strictly": <boolean>, "min" : <int>, "max" : <int>, "minSize" : <int> }`|
+
+Increasing the number of rules for a config, or specific properties of the config can increase the time required to generate the board. It's also possible to specify a config file that is impossible to satisfy - for example a config file with only 1 land tile, and `IslandCount` specifying that there needs to be a minimum of two islands. Be careful! 
 
 ## Ports
 Ports are specified by port objects as described below.
@@ -97,3 +99,12 @@ The program will render in text and save as an image in the output directory. It
 |`-r <float value>`|Specifies the radius of the chits in pixels|No|`100.0f`|
 |`-m <float value>`|Specifies the length of the hex margins in pixels|No|`5.0f`|
 |`-h`|Prints the available commands|No|`n/a`|
+
+## Generated Board Examples
+Here is an example of a board generated with the [seafarers config](configs/seafarers.json)
+
+![](seafarers_board.jpg)
+
+Here is an example of a board generated with the [cities and knights config](configs/citiesandknights.json)
+
+![](candk_board.jpg)
