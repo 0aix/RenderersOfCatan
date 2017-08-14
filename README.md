@@ -79,20 +79,22 @@ Ports are specified by port objects as described below.
 * "wood"
 * "?"
 
-## Building
+## Installing
+Before you start, you will need to install the following Homebrew packages.
+* [glew](http://brewformulas.org/glew)
+* [glfw](http://brewformulas.org/glfw)
+* [libpng](http://brewformulas.org/libpng)
+* [zlib](http://brewformulas.org/zlib)
+
+Next, clone the repository. 
 ```
-make
+$> git clone https://github.com/0aix/RenderersOfCatan.git
 ```
 
-It's necessary to have glew, glfw, libpng, and zlib installed, which can be done through Homebrew. 
-
-[glew](http://brewformulas.org/glew)
-
-[glfw](http://brewformulas.org/glfw)
-
-[libpng](http://brewformulas.org/libpng)
-
-[zlib](http://brewformulas.org/zlib)
+Than, run `make` to build the program.
+```
+$> make
+```
 
 ## Running
 ```
@@ -108,6 +110,7 @@ The program will render in text and save as an image in the output directory. It
 |`-l <float value>`|Specifies the length of the hex tile sides in pixels|No|`400.0f`|
 |`-r <float value>`|Specifies the radius of the chits in pixels|No|`100.0f`|
 |`-m <float value>`|Specifies the length of the hex margins in pixels|No|`5.0f`|
+|`-f <file name>`|Specifies the file name to save the board as. The board will be saved in the `output` folder|No|`board.png`|
 |`-h`|Prints the available commands|No|`n/a`|
 
 ## Generated Board Examples
