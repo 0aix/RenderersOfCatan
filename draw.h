@@ -14,9 +14,9 @@ namespace Catan
         void LoadAll();
         void LoadPortVertices(float length, float margin);
 
-        void Render(Generate::BoardGraph& graph, float length, float radius, float margin, std::string filename);
-        void DrawTile(float cx, float cy, float length, float margin, int type);
-        void DrawChit(float cx, float cy, float radius, float margin, int num);
+        void Render(Generate::BoardGraph& graph, float length, float radius, float margin, bool random, std::string filename);
+        void DrawTile(float cx, float cy, float length, float margin, int type, bool random);
+        void DrawChit(float cx, float cy, float radius, float margin, int num, bool random);
         void DrawPort(float cx, float cy, float length, float margin, int type, int dir);
 
         void SaveToFile(GLuint textureID, int width, int height, std::string filename);

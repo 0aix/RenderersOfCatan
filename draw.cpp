@@ -61,15 +61,6 @@ namespace Catan
             -0.5f, -0.8660254f,
             -1.0f, 0.0f
         };
-        // const GLfloat tile_uv[] = 
-        // {
-        //     0.25f, 0.0669873f,
-        //     0.75f, 0.0669873f,
-        //     1.0f, 0.5f,
-        //     0.75f, 0.9330127f,
-        //     0.25f, 0.9330127f,
-        //     0.0f, 0.5f
-        // };
         const GLfloat tile_uv[] = 
         {
             0.25f, 0.0669873f,
@@ -85,7 +76,6 @@ namespace Catan
             0.25f, 0.9330127f
         };
         GLfloat chit_vertices[1024 * 2];
-        // GLfloat chit_uv[1024 * 2];
         GLfloat chit_uv[(1024 + 1023) * 2];
         const GLfloat port_uv[] = {
             0.0f, 1-1.0f,
@@ -228,7 +218,6 @@ namespace Catan
 
             // Load chit uv vertices
             radian = 0.0f;
-            // for (int i = 0; i < 1024; i++)
             for (int i = 0; i < 1024 + 1023; i++)
             {
                 chit_uv[i * 2] = 0.5f * cos(radian) + 0.5f;
@@ -310,7 +299,7 @@ namespace Catan
             glBufferData(GL_ARRAY_BUFFER, sizeof(port_vertices), port_vertices, GL_STATIC_DRAW);
         }
 
-        void Render(Generate::BoardGraph& graph, float length, float radius, float margin, std::string filename)
+        void Render(Generate::BoardGraph& graph, float length, float radius, float margin, bool random, std::string filename)
         {
             // Compute width and height
             int bwidth = graph.BoardWidth();
@@ -375,7 +364,7 @@ namespace Catan
             float y = 1.5f * 1.7320508f * length + 2.0f * margin + (bheight - rows) * (0.8660254f * length + 0.5f * margin);
             for (int j = 0; j < rows; j++)
             {
-                DrawTile(x, y, length, margin, Generate::WATER);
+                DrawTile(x, y, length, margin, Generate::WATER, random);
                 y += 1.7320508f * length + margin;
             }
             x += 1.5f * length + 0.8660254f * margin;
@@ -384,15 +373,15 @@ namespace Catan
                 rows = graph.ColumnHeight(i);
                 float y1 = 0.5f * 1.7320508f * length + margin + (bheight - rows) * (0.8660254f * length + 0.5f * margin);
                 float y2 = y1 + (rows + 1) * ((1.7320508f * length) + margin);
-                DrawTile(x, y1, length, margin, Generate::WATER);
-                DrawTile(x, y2, length, margin, Generate::WATER);
+                DrawTile(x, y1, length, margin, Generate::WATER, random);
+                DrawTile(x, y2, length, margin, Generate::WATER, random);
                 x += 1.5f * length + 0.8660254f * margin;
             }
             rows = graph.ColumnHeight(bwidth - 1) + 1;
             y = 1.5f * 1.7320508f * length + 2.0f * margin + (bheight - rows) * (0.8660254f * length + 0.5f * margin);
             for (int j = 0; j < rows; j++)
             {
-                DrawTile(x, y, length, margin, Generate::WATER);
+                DrawTile(x, y, length, margin, Generate::WATER, random);
                 y += 1.7320508f * length + margin;
             }
 
@@ -408,8 +397,8 @@ namespace Catan
                 for (int j = 0; j < rows; j++)
                 {
                     Generate::BoardNode* node = it.Next();
-                    DrawTile(x, y, length, margin, node->type);
-                    DrawChit(x, y, radius, margin, node->chit);
+                    DrawTile(x, y, length, margin, node->type, random);
+                    DrawChit(x, y, radius, margin, node->chit, random);
 
                     for (auto port : node->NonNullPorts())
                         DrawPort(x, y, length, margin, port.first->type, port.second);
@@ -436,7 +425,7 @@ namespace Catan
             glDeleteFramebuffers(2, framebuffer);
         }
 
-        void DrawTile(float cx, float cy, float length, float margin, int type)
+        void DrawTile(float cx, float cy, float length, float margin, int type, bool random)
         {
             // Draw tile outline
             float halfwidth = length + margin / 0.8660254f;
@@ -463,14 +452,13 @@ namespace Catan
             glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[0]);
             glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
             glBindBuffer(GL_ARRAY_BUFFER, uvbuffer[0]);
-            // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
-            glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((rand() % 6) * sizeof(GLfloat) * 2));
+            glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, random ? (GLvoid*)((rand() % 6) * sizeof(GLfloat) * 2) : NULL);
             glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
             glDisableVertexAttribArray(0);
             glDisableVertexAttribArray(1);
         }
 
-        void DrawChit(float cx, float cy, float radius, float margin, int num)
+        void DrawChit(float cx, float cy, float radius, float margin, int num, bool random)
         {
             if (num >= 0)
             {
@@ -498,8 +486,7 @@ namespace Catan
                 glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[1]);
                 glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
                 glBindBuffer(GL_ARRAY_BUFFER, uvbuffer[1]);
-                // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
-                glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)((rand() % 1024) * sizeof(GLfloat) * 2));
+                glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, random ? (GLvoid*)((rand() % 1024) * sizeof(GLfloat) * 2) : NULL);
                 glDrawArrays(GL_TRIANGLE_FAN, 0, 1024);
                 glDisableVertexAttribArray(0);
                 glDisableVertexAttribArray(1);
