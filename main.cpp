@@ -67,6 +67,7 @@ int main(int argc, char **argv)
         cout << "-l [float hex side length in pixels] (optional)" << endl;
         cout << "-r [float chit radius length in pixels] (optional)" << endl;
         cout << "-m [float margin size in pixels] (optional)" << endl;
+        cout << "-f [output file name]" << endl;
         cout << "-h (optional) Display help" << endl;
         return 0;
         break;
