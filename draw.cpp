@@ -6,6 +6,7 @@
 #include <iostream>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <string>
 #include "shader.h"
 #include "include/boardgraph.h"
 #include "png.h"
@@ -309,7 +310,7 @@ namespace Catan
             glBufferData(GL_ARRAY_BUFFER, sizeof(port_vertices), port_vertices, GL_STATIC_DRAW);
         }
 
-        void Render(Generate::BoardGraph& graph, float length, float radius, float margin)
+        void Render(Generate::BoardGraph& graph, float length, float radius, float margin, std::string filename)
         {
             // Compute width and height
             int bwidth = graph.BoardWidth();
@@ -426,9 +427,9 @@ namespace Catan
             }
 
             // Save texture
-            printf("Saving to png...\n");
+            printf("Saving to image as %s\n", filename.c_str());
 
-            SaveToFile(rendertarget[0], width, height);
+            SaveToFile(rendertarget[0], width, height, filename);
 
             // Release resources
             glDeleteTextures(2, rendertarget);
@@ -535,14 +536,14 @@ namespace Catan
             glDisableVertexAttribArray(1);
         }
 
-        void SaveToFile(GLuint textureID, int width, int height)
+        void SaveToFile(GLuint textureID, int width, int height, std::string filename)
         {
             char* buffer = new char[width * height * 3];
             glBindTexture(GL_TEXTURE_2D, textureID);
             glPixelStorei(GL_PACK_ALIGNMENT, 1);
             glGetTexImage(GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE, buffer);
 
-            FILE* file = fopen("./output/board.png", "wb");
+            FILE* file = fopen(("./output/" + filename).c_str(), "wb");
             png_struct* png = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
             png_info* info = png_create_info_struct(png);
             

@@ -20,7 +20,8 @@ const int CONFIG_PARSE_ERROR_CODE = 2;
 // -c [Config file path]     
 // -l [float hex side length]
 // -r [float chit radius]    
-// -m [float margin size]    
+// -m [float margin size]
+// -f [output file name]    
 // -h
 
 int main(int argc, char **argv)
@@ -33,10 +34,11 @@ int main(int argc, char **argv)
   float length = 400.0f;
   float radius = 100.0f;
   float margin = 5.0f;
+  string filename = "board.png";
 
 	// Handle command line arguments
   int c;
-	while ((c = getopt(argc, argv, "c:l:r:m:h")) != -1) {
+	while ((c = getopt(argc, argv, "c:l:r:m:f:h")) != -1) {
     switch (c) {
       case 'c':
         fin = fstream(optarg);
@@ -55,6 +57,9 @@ int main(int argc, char **argv)
         break;
       case 'm':
         margin = stof(optarg);
+        break;
+      case 'f':
+        filename = optarg;
         break;
       case 'h':
         cout << "Commands for catangen:" << endl;
@@ -78,9 +83,8 @@ int main(int argc, char **argv)
 	Catan::Draw::RenderAsText(graph);
 	if (Catan::Draw::Initialize())
 	{
-		Catan::Draw::Render(graph, length, radius, margin);
+		Catan::Draw::Render(graph, length, radius, margin, filename.c_str());
 		Catan::Draw::Uninitialize();
-    system("open ./output/board.png");
 	}
 
   return 0;
