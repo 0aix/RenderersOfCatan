@@ -10,6 +10,7 @@
 #include "shader.h"
 #include "include/boardgraph.h"
 #include "png.h"
+#include <vector>
 
 #define CATAN_GLFW_INIT_FAILED 0
 #define CATAN_GLFW_CREATE_WINDOW_FAILED 1
@@ -358,13 +359,18 @@ namespace Catan
             // Render
             glClear(GL_COLOR_BUFFER_BIT);
 
+            std::vector<Pile> tilelist;
+            std::vector<Pile> portlist;
+
             // Draw water tile outline
             int rows = graph.ColumnHeight(0) + 1;
             float x = length + margin / 0.8660254f;
             float y = 1.5f * 1.7320508f * length + 2.0f * margin + (bheight - rows) * (0.8660254f * length + 0.5f * margin);
             for (int j = 0; j < rows; j++)
             {
-                DrawTile(x, y, length, margin, Generate::WATER, random);
+                Pile t = { x, y, Generate::WATER, -1 };
+                tilelist.push_back(t);
+                //DrawTile(x, y, length, margin, Generate::WATER, random);
                 y += 1.7320508f * length + margin;
             }
             x += 1.5f * length + 0.8660254f * margin;
@@ -373,15 +379,21 @@ namespace Catan
                 rows = graph.ColumnHeight(i);
                 float y1 = 0.5f * 1.7320508f * length + margin + (bheight - rows) * (0.8660254f * length + 0.5f * margin);
                 float y2 = y1 + (rows + 1) * ((1.7320508f * length) + margin);
-                DrawTile(x, y1, length, margin, Generate::WATER, random);
-                DrawTile(x, y2, length, margin, Generate::WATER, random);
+                //DrawTile(x, y1, length, margin, Generate::WATER, random);
+                //DrawTile(x, y2, length, margin, Generate::WATER, random);
+                Pile t1 = { x, y1, Generate::WATER, -1 };
+                Pile t2 = { x, y2, Generate::WATER, -1 };
+                tilelist.push_back(t1);
+                tilelist.push_back(t2);
                 x += 1.5f * length + 0.8660254f * margin;
             }
             rows = graph.ColumnHeight(bwidth - 1) + 1;
             y = 1.5f * 1.7320508f * length + 2.0f * margin + (bheight - rows) * (0.8660254f * length + 0.5f * margin);
             for (int j = 0; j < rows; j++)
             {
-                DrawTile(x, y, length, margin, Generate::WATER, random);
+                Pile t = { x, y, Generate::WATER, -1 };
+                tilelist.push_back(t);
+                //DrawTile(x, y, length, margin, Generate::WATER, random);
                 y += 1.7320508f * length + margin;
             }
 
@@ -397,16 +409,31 @@ namespace Catan
                 for (int j = 0; j < rows; j++)
                 {
                     Generate::BoardNode* node = it.Next();
-                    DrawTile(x, y, length, margin, node->type, random);
-                    DrawChit(x, y, radius, margin, node->chit, random);
+                    //DrawTile(x, y, length, margin, node->type, random);
+                    //DrawChit(x, y, radius, margin, node->chit, random);
+                    Pile t = { x, y, node->type, node->chit };
+                    tilelist.push_back(t);
 
                     for (auto port : node->NonNullPorts())
-                        DrawPort(x, y, length, margin, port.first->type, port.second);
+                    {
+                        Pile p = { x, y, port.first->type, port.second };
+                        portlist.push_back(p);
+                        //DrawPort(x, y, length, margin, port.first->type, port.second);
+                    }
 
                     y += 1.7320508f * length + margin;
                 }
                 x += 1.5f * length + 0.8660254f * margin;
             }
+
+            for (Pile t : tilelist)
+            {
+                DrawTile(t.x, t.y, length, margin, t.type, random);
+                DrawChit(t.x, t.y, radius, margin, t.n, random);
+            }
+
+            for (Pile p : portlist)
+                DrawPort(p.x, p.y, length, margin, p.type, p.n);
 
             // Blit
             if (multisample)

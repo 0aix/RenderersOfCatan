@@ -9,6 +9,14 @@ namespace Catan
 {
     namespace Draw
     {
+        struct Pile
+        {
+            float x;
+            float y;
+            int type;
+            int n;
+        };
+
         bool Initialize();
         void Uninitialize();
         void LoadAll();
