@@ -14,7 +14,7 @@ Different kinds of boards can be generated with config files. The format for the
   "forest_count" : <int>,
   "mine_count" : <int>,
   "mountain_count" : <int>,
-  "wheat_counmt" : <int>,
+  "wheat_count" : <int>,
   "fields_count" : <int>,
   "rules" : [
     <rule object>,
